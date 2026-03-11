@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import TunnelBg from './TunnelBg'
 import NavDots from './NavDots'
 import HeroSlide from './slides/HeroSlide'
 import AboutSlide from './slides/AboutSlide'
@@ -23,19 +22,19 @@ const SLIDES = [
 
 const variants = {
   enter: (dir) => ({
-    z:     dir > 0 ? -3800 : 1600,
-    scale: dir > 0 ? 0.04  : 2.2,
+    z:     dir > 0 ? -2200 : 1200,
+    scale: dir > 0 ? 0.12  : 1.9,
     opacity: 0,
   }),
   center: {
     z: 0, scale: 1, opacity: 1,
-    transition: { duration: 1.05, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
   },
   exit: (dir) => ({
-    z:     dir > 0 ? 1800 : -3800,
-    scale: dir > 0 ? 2.4  : 0.04,
+    z:     dir > 0 ? 1200 : -2200,
+    scale: dir > 0 ? 1.9  : 0.12,
     opacity: 0,
-    transition: { duration: 0.72, ease: [0.55, 0, 1, 0.45] },
+    transition: { duration: 0.6, ease: [0.55, 0, 1, 0.45] },
   }),
 }
 
@@ -52,7 +51,8 @@ export default function TunnelExperience() {
     locked.current = true
     setDir(delta > 0 ? 1 : -1)
     setCurrent(next)
-    setTimeout(() => { locked.current = false }, 1900)
+    window.dispatchEvent(new CustomEvent('tunnelwarp'))
+    setTimeout(() => { locked.current = false }, 1600)
   }, [current])
 
   const goTo = useCallback((index) => {
@@ -60,7 +60,8 @@ export default function TunnelExperience() {
     locked.current = true
     setDir(index > current ? 1 : -1)
     setCurrent(index)
-    setTimeout(() => { locked.current = false }, 1900)
+    window.dispatchEvent(new CustomEvent('tunnelwarp'))
+    setTimeout(() => { locked.current = false }, 1600)
   }, [current])
 
   useEffect(() => {
@@ -92,7 +93,6 @@ export default function TunnelExperience() {
 
   return (
     <div className={styles.wrapper}>
-      <TunnelBg slideIndex={current} />
 
       {/* Header bar */}
       <header className={styles.header}>

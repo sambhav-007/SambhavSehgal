@@ -7,16 +7,13 @@ export default function TunnelBg() {
       <div className={styles.floor} />
       {/* Perspective ceiling grid */}
       <div className={styles.ceiling} />
-      {/* Side wall grids */}
-      <div className={styles.wallLeft} />
-      <div className={styles.wallRight} />
 
       {/* Expanding tunnel rings from vanishing point */}
-      {Array.from({ length: 14 }).map((_, i) => (
+      {Array.from({ length: 6 }).map((_, i) => (
         <div
           key={i}
           className={styles.ring}
-          style={{ '--i': i, '--total': 14 }}
+          style={{ '--i': i, '--total': 6 }}
         />
       ))}
 

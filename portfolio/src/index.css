@@ -41,7 +41,7 @@ html::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
 
 body {
   font-family: var(--font-main);
-  background-color: var(--bg-primary);
+  background-color: #000000;
   color: var(--text-primary);
   line-height: 1.6;
   overflow: hidden;
