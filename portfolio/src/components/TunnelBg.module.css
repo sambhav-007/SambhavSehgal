@@ -1,0 +1,169 @@
+/* ── Tunnel Background ── */
+.bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Floor grid — perspective, scrolling toward viewer ── */
+.floor {
+  position: absolute;
+  bottom: 0;
+  left: -60%;
+  right: -60%;
+  height: 60%;
+  background-image:
+    linear-gradient(rgba(124, 58, 237, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.14) 1px, transparent 1px);
+  background-size: 70px 70px;
+  transform: perspective(700px) rotateX(78deg);
+  transform-origin: 50% 100%;
+  animation: gridScroll 2.4s linear infinite;
+}
+
+/* ── Ceiling grid ── */
+.ceiling {
+  position: absolute;
+  top: 0;
+  left: -60%;
+  right: -60%;
+  height: 60%;
+  background-image:
+    linear-gradient(rgba(6, 182, 212, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.09) 1px, transparent 1px);
+  background-size: 70px 70px;
+  transform: perspective(700px) rotateX(-78deg);
+  transform-origin: 50% 0%;
+  animation: gridScroll 2.4s linear infinite;
+}
+
+/* ── Left wall ── */
+.wallLeft {
+  position: absolute;
+  top: -60%;
+  left: 0;
+  width: 60%;
+  bottom: -60%;
+  background-image:
+    linear-gradient(rgba(168, 85, 247, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.06) 1px, transparent 1px);
+  background-size: 70px 70px;
+  transform: perspective(700px) rotateY(78deg);
+  transform-origin: 0% 50%;
+  animation: gridScrollH 2.4s linear infinite;
+}
+
+/* ── Right wall ── */
+.wallRight {
+  position: absolute;
+  top: -60%;
+  right: 0;
+  width: 60%;
+  bottom: -60%;
+  background-image:
+    linear-gradient(rgba(168, 85, 247, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.06) 1px, transparent 1px);
+  background-size: 70px 70px;
+  transform: perspective(700px) rotateY(-78deg);
+  transform-origin: 100% 50%;
+  animation: gridScrollH 2.4s linear infinite;
+}
+
+@keyframes gridScroll {
+  from { background-position: 0 0; }
+  to   { background-position: 0 70px; }
+}
+
+@keyframes gridScrollH {
+  from { background-position: 0 0; }
+  to   { background-position: 70px 0; }
+}
+
+/* ── Expanding tunnel rings ── */
+.ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 40% / 30%;
+  border: 1px solid rgba(124, 58, 237, 0.22);
+  animation: ringExpand 3.6s linear infinite;
+  animation-delay: calc(var(--i) * (3.6s / var(--total)));
+}
+
+.ring:nth-child(even)  { border-color: rgba(6, 182, 212, 0.16); }
+.ring:nth-child(3n)    { border-color: rgba(236, 72, 153, 0.1); }
+
+@keyframes ringExpand {
+  0% {
+    width: 80px;
+    height: 55px;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  4%  { opacity: 0.85; }
+  75% { opacity: 0.2; }
+  100% {
+    width: 260vw;
+    height: 260vh;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+}
+
+/* ── Center vanishing-point glow ── */
+.vpGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(ellipse at center,
+    rgba(124, 58, 237, 0.18) 0%,
+    rgba(6, 182, 212, 0.08) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: vpPulse 4s ease-in-out infinite;
+}
+
+@keyframes vpPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+  50%       { transform: translate(-50%, -50%) scale(1.5); opacity: 0.5; }
+}
+
+/* ── Convergence beam lines ── */
+.beamLeft, .beamRight {
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  width: 46%;
+  transform: translateY(-50%);
+}
+
+.beamLeft  { left: 0;  background: linear-gradient(to right, transparent, rgba(124,58,237,0.3)); }
+.beamRight { right: 0; background: linear-gradient(to left,  transparent, rgba(124,58,237,0.3)); }
+
+.beamTop, .beamBottom {
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  height: 46%;
+  transform: translateX(-50%);
+}
+
+.beamTop    { top: 0;    background: linear-gradient(to bottom, transparent, rgba(6,182,212,0.2)); }
+.beamBottom { bottom: 0; background: linear-gradient(to top,    transparent, rgba(6,182,212,0.2)); }
+
+/* ── Edge vignette ── */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center,
+    transparent 40%,
+    rgba(5, 5, 16, 0.6) 80%,
+    rgba(5, 5, 16, 0.92) 100%
+  );
+}

@@ -1,0 +1,126 @@
+.wrapper {
+  position: fixed;
+  inset: 0;
+  background: #050510;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* ── Header ── */
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  background: linear-gradient(to bottom, rgba(5,5,16,0.85) 0%, transparent 100%);
+  backdrop-filter: blur(4px);
+}
+
+.logo {
+  font-size: 1.55rem;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  background: linear-gradient(135deg, #a855f7, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -1px;
+}
+
+.dot { color: #a855f7; -webkit-text-fill-color: #a855f7; }
+
+.sectionLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: rgba(168, 85, 247, 0.75);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.hireBtn {
+  padding: 8px 22px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  color: white;
+  font-weight: 600;
+  font-size: 0.82rem;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.25);
+}
+
+.hireBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(124,58,237,0.45);
+}
+
+/* ── 3D Viewport ── */
+.viewport {
+  position: absolute;
+  inset: 0;
+  perspective: 1300px;
+  perspective-origin: 50% 50%;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+/* ── Bottom bar ── */
+.bottomBar {
+  position: absolute;
+  bottom: 20px;
+  left: 32px;
+  right: 80px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.counter {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.cCurrent {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a855f7, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.cSep   { font-size: 1rem;  color: #334155; }
+.cTotal { font-size: 0.85rem; color: #475569; font-weight: 500; }
+
+.scrollHint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif;
+  transition: color 0.2s;
+}
+
+.scrollHint:hover { color: #a855f7; }
