@@ -14,6 +14,7 @@ import ProjectsSlide from './slides/ProjectsSlide'
 import AchievementsSlide from './slides/AchievementsSlide'
 import ContactSlide from './slides/ContactSlide'
 import styles from './TunnelExperience.module.css'
+import ScrollProgress from './ScrollProgress'
 
 const SLIDES = [
   { id: 'hero',         label: 'Home',         component: HeroSlide },
@@ -318,6 +319,7 @@ export default function TunnelExperience() {
         </div>
       </div>
 
+      <ScrollProgress current={currentIdx} total={SLIDES.length} />
       <NavDots slides={SLIDES} current={currentIdx} goTo={goTo} />
 
       <div className={styles.bottomBar}>
