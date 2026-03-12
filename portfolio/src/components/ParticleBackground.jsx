@@ -11,6 +11,11 @@ export default function ParticleBackground() {
     let particles = []
     // scrollVel: positive = outward (forward), negative = inward (backward), decays to 0
     let scrollVel = 0
+    // Mouse parallax — vanishing point lags behind cursor in opposite direction
+    let mouseX = 0, mouseY = 0          // raw cursor (0..1 normalised)
+    let vpOffX = 0, vpOffY = 0          // current lerped offset (px)
+    const VP_STRENGTH = 65              // max offset in px
+    const VP_LERP     = 0.04            // smoothing speed
 
     const resize = () => {
       canvas.width = window.innerWidth
@@ -49,9 +54,7 @@ export default function ParticleBackground() {
         this.prevSy  = null
       }
 
-      update(dz) {
-        const cx = canvas.width  / 2
-        const cy = canvas.height / 2
+      update(dz, cx, cy) {
         this.prevSx = this.x3 / this.z * FOV + cx
         this.prevSy = this.y3 / this.z * FOV + cy
 
@@ -60,10 +63,7 @@ export default function ParticleBackground() {
         if (this.z > Z_FAR)   this.reset(false)
       }
 
-      draw() {
-        const cx = canvas.width  / 2
-        const cy = canvas.height / 2
-
+      draw(cx, cy) {
         const sx  = this.x3 / this.z  * FOV + cx
         const sy  = this.y3 / this.z  * FOV + cy
 
@@ -102,12 +102,20 @@ export default function ParticleBackground() {
       ctx.fillStyle = 'rgba(0,0,0,0.14)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+      // Lerp vanishing point opposite to cursor — far stars barely shift, near stars shift fully
+      const targetOffX = -(mouseX - 0.5) * 2 * VP_STRENGTH
+      const targetOffY = -(mouseY - 0.5) * 2 * VP_STRENGTH
+      vpOffX += (targetOffX - vpOffX) * VP_LERP
+      vpOffY += (targetOffY - vpOffY) * VP_LERP
+      const cx = canvas.width  / 2 + vpOffX
+      const cy = canvas.height / 2 + vpOffY
+
       // dz: z-decrease per frame — scrollVel boosts or reverses it
       const dz = BASE_DZ + scrollVel * 14
       scrollVel *= 0.92
       if (Math.abs(scrollVel) < 0.003) scrollVel = 0
 
-      particles.forEach(p => { p.update(dz); p.draw() })
+      particles.forEach(p => { p.update(dz, cx, cy); p.draw(cx, cy) })
       animationId = requestAnimationFrame(animate)
     }
     animate()
@@ -117,11 +125,17 @@ export default function ParticleBackground() {
       const contrib = Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 60) / 60 * 0.45
       scrollVel = Math.max(-1, Math.min(1, scrollVel + contrib))
     }
+    const onMouseMove = (e) => {
+      mouseX = e.clientX / window.innerWidth
+      mouseY = e.clientY / window.innerHeight
+    }
     window.addEventListener('wheel', onWheel, { passive: true })
+    window.addEventListener('mousemove', onMouseMove)
 
     return () => {
       window.removeEventListener('resize', resize)
       window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('mousemove', onMouseMove)
       cancelAnimationFrame(animationId)
     }
   }, [])

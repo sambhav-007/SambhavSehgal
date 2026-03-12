@@ -2,22 +2,60 @@ import { motion } from 'framer-motion'
 import TunnelSlide from '../TunnelSlide'
 import s from './slides.module.css'
 
+// ── Honest, single-tech bars ─────────────────────────────────────────────────
 const BARS = [
-  { name: 'JavaScript / ES6+', pct: 92, color: 'linear-gradient(90deg,#eab308,#f59e0b)' },
-  { name: 'React.js / Vite',   pct: 90, color: 'linear-gradient(90deg,#06b6d4,#0ea5e9)' },
-  { name: 'Node.js / Express', pct: 85, color: 'linear-gradient(90deg,#22c55e,#16a34a)' },
-  { name: 'MySQL / Sequelize', pct: 80, color: 'linear-gradient(90deg,#f97316,#ea580c)' },
-  { name: 'Framer Motion',     pct: 82, color: 'linear-gradient(90deg,#a855f7,#7c3aed)' },
-  { name: 'Python / OpenCV',   pct: 72, color: 'linear-gradient(90deg,#3b82f6,#6366f1)' },
+  { name: 'Java',        pct: 82, color: 'linear-gradient(90deg,#a855f7,#7c3aed)' },
+  { name: 'JavaScript',  pct: 80, color: 'linear-gradient(90deg,#eab308,#f59e0b)' },
+  { name: 'React',       pct: 78, color: 'linear-gradient(90deg,#06b6d4,#0ea5e9)' },
+  { name: 'SQL',         pct: 76, color: 'linear-gradient(90deg,#f97316,#ea580c)' },
+  { name: 'Node.js',     pct: 74, color: 'linear-gradient(90deg,#22c55e,#16a34a)' },
+  { name: 'Python',      pct: 72, color: 'linear-gradient(90deg,#3b82f6,#6366f1)' },
+  
 ]
 
 const GROUPS = [
-  { name: 'Frontend', color: '#a855f7', bg: 'rgba(168,85,247,0.08)', tags: ['React', 'Vite', 'Framer Motion', 'CSS Modules'] },
-  { name: 'Backend',  color: '#06b6d4', bg: 'rgba(6,182,212,0.08)',  tags: ['Node.js', 'Express 5', 'REST APIs'] },
-  { name: 'Database', color: '#22c55e', bg: 'rgba(34,197,94,0.08)',  tags: ['MySQL', 'Sequelize ORM'] },
-  { name: 'Auth',     color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', tags: ['Passport.js', 'JWT', 'OAuth2', 'SendGrid'] },
-  { name: 'AI / ML',  color: '#ec4899', bg: 'rgba(236,72,153,0.08)', tags: ['Gemini API', 'OpenCV', 'ML Pipelines'] },
-  { name: 'Languages',color: '#8b5cf6', bg: 'rgba(139,92,246,0.08)', tags: ['JavaScript', 'Python', 'HTML/CSS'] },
+  {
+    name: '🚀 Languages',
+    color: '#eab308',
+    bg: 'rgba(234,179,8,0.08)',
+    tags: ['Java', 'C++', 'Python', 'JavaScript', 'C'],
+  },
+  {
+    name: '🌐 Frontend',
+    color: '#06b6d4',
+    bg: 'rgba(6,182,212,0.08)',
+    tags: ['HTML', 'CSS', 'React', 'Tailwind CSS', 'Framer Motion', 'Vite'],
+  },
+  {
+    name: '⚙️ Backend',
+    color: '#22c55e',
+    bg: 'rgba(34,197,94,0.08)',
+    tags: ['Node.js', 'Express.js', 'Flask', 'REST APIs', 'API Design'],
+  },
+  {
+    name: '🗄️ Databases',
+    color: '#f97316',
+    bg: 'rgba(249,115,22,0.08)',
+    tags: ['MongoDB', 'MongoDB Atlas', 'MySQL', 'PostgreSQL', 'SQLite'],
+  },
+  {
+    name: '🤖 AI / CV',
+    color: '#ec4899',
+    bg: 'rgba(236,72,153,0.08)',
+    tags: ['OpenCV', 'EasyOCR', 'ML Pipelines'],
+  },
+  {
+    name: '🔌 IoT / Systems',
+    color: '#a855f7',
+    bg: 'rgba(168,85,247,0.08)',
+    tags: ['Arduino', 'Embedded C', 'Linux'],
+  },
+  {
+    name: '🛠 Tools',
+    color: '#8b5cf6',
+    bg: 'rgba(139,92,246,0.08)',
+    tags: ['Git', 'GitHub', 'VS Code', 'Postman'],
+  },
 ]
 
 function Left() {
@@ -46,7 +84,7 @@ function Left() {
 
 function Right() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, height: '100%' }}>
       {GROUPS.map((g) => (
         <div key={g.name} className={s.skillGroup}>
           <div className={s.skillGroupHeader}>
