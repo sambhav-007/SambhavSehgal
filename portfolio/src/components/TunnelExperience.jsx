@@ -74,6 +74,8 @@ export default function TunnelExperience() {
   const inTransit     = useRef(false)
   const hasPreview    = useRef(false)
   const activeSlotRef = useRef(0)   // mirrors activeSlot; updated sync on commit
+  const currentIdxRef = useRef(0)   // mirrors currentIdx; updated sync on commit — avoids stale-closure bug
+  const pendingIdxRef = useRef(null) // target idx of in-flight preview
   const scrollAccum   = useRef(0)
   const touchY        = useRef(null)
 
@@ -116,6 +118,8 @@ export default function TunnelExperience() {
         hideSlot(slotRefs[curSlot].current)
 
         activeSlotRef.current = nxtSlot   // sync ref update (immediate)
+        currentIdxRef.current = pendingIdxRef.current ?? currentIdxRef.current
+        pendingIdxRef.current = null
         inTransit.current     = false
         hasPreview.current    = false
         progress.current      = 0
@@ -164,9 +168,10 @@ export default function TunnelExperience() {
   // Load target slide into pending slot
   const startPreview = useCallback((d, targetIdx) => {
     const nxtSlot = 1 - activeSlotRef.current
-    dirRef.current     = d
-    hasPreview.current = true
-    progress.current   = 0
+    dirRef.current        = d
+    hasPreview.current    = true
+    pendingIdxRef.current = targetIdx
+    progress.current      = 0
     setSlots(prev => { const s = [...prev]; s[nxtSlot] = targetIdx; return s })
   }, [])
 
@@ -208,7 +213,7 @@ export default function TunnelExperience() {
 
       const d        = scrollAccum.current > 0 ? 1 : -1
       const absAccum = Math.abs(scrollAccum.current)
-      const target   = currentIdx + d
+      const target   = currentIdxRef.current + d
 
       if (target < 0 || target >= SLIDES.length) {
         scrollAccum.current = 0
@@ -247,7 +252,7 @@ export default function TunnelExperience() {
               : ['ArrowUp', 'PageUp'].includes(e.key)          ? -1 : 0
       if (!d) return
       e.preventDefault()
-      const t = currentIdx + d
+      const t = currentIdxRef.current + d
       if (t < 0 || t >= SLIDES.length) return
       startPreview(d, t)
       window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: d } }))
@@ -260,7 +265,7 @@ export default function TunnelExperience() {
       const delta = touchY.current - e.changedTouches[0].clientY
       if (Math.abs(delta) > 70 && !inTransit.current && !hasPreview.current) {
         const d = delta > 0 ? 1 : -1
-        const t = currentIdx + d
+        const t = currentIdxRef.current + d
         if (t >= 0 && t < SLIDES.length) {
           startPreview(d, t)
           window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: d } }))

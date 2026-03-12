@@ -55,13 +55,44 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: nameGrad 5s ease infinite;
+  animation: nameGrad 5s ease infinite, heroGlitch 3s ease infinite;
 }
 
 @keyframes nameGrad {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+@keyframes heroGlitch {
+  0%, 93%, 100% {
+    filter: none;
+    transform: none;
+  }
+  94% {
+    filter: drop-shadow(-4px 0 #ff0040) drop-shadow(4px 0 #00e5ff);
+    transform: skewX(-5deg) translateX(4px);
+  }
+  95% {
+    filter: drop-shadow(4px 0 #ff0040) drop-shadow(-4px 0 #00e5ff) brightness(1.35);
+    transform: skewX(4deg) translateX(-3px);
+  }
+  96% {
+    filter: drop-shadow(-2px 0 #ff0040) drop-shadow(2px 0 #00e5ff);
+    transform: skewX(-2deg) translateX(2px);
+  }
+  97% {
+    filter: drop-shadow(3px 0 #ff0040) drop-shadow(-3px 0 #00e5ff) brightness(1.2);
+    transform: skewX(3deg) translateX(-2px);
+  }
+  98% {
+    filter: none;
+    transform: skewX(1deg);
+  }
+  99% {
+    filter: none;
+    transform: none;
+  }
 }
 
 .roleRow {
