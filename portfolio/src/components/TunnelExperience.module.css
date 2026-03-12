@@ -65,6 +65,7 @@
   perspective: 1300px;
   perspective-origin: 50% 50%;
   overflow: hidden;
+  pointer-events: none;   /* don't block sibling nav/header clicks */
 }
 
 .slide {
@@ -75,6 +76,7 @@
   justify-content: center;
   will-change: transform, opacity;
   backface-visibility: hidden;
+  pointer-events: auto;   /* slide content is still interactive */
 }
 
 /* ── Bottom bar ── */

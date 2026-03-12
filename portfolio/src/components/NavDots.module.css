@@ -17,8 +17,9 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 3px;
+  padding: 8px 6px;       /* larger hit area */
   flex-direction: row-reverse;
+  pointer-events: auto;
 }
 
 .dot {

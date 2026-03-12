@@ -1,5 +1,10 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+// ── DUAL-SLOT TUNNEL ────────────────────────────────────────────────────────
+// Two persistent divs (slot 0 & 1) stay in the DOM at all times.
+// On commit we flip which slot is "active" — the arrived slide never re-mounts,
+// so its content / animations never replay.
+// ─────────────────────────────────────────────────────────────────────────────
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { motion } from 'framer-motion'
 import NavDots from './NavDots'
 import HeroSlide from './slides/HeroSlide'
 import AboutSlide from './slides/AboutSlide'
@@ -20,124 +25,306 @@ const SLIDES = [
   { id: 'contact',      label: 'Contact',      component: ContactSlide },
 ]
 
-const variants = {
-  // Forward (dive in): enter tiny from far back, exit large toward camera
-  // Backward (dive out): enter slightly large, exit slightly small — no z to avoid perspective overflow
-  enter: (dir) => dir > 0
-    ? { z: -2200, scale: 0.12, opacity: 0 }
-    : { z: 0, scale: 1.14, opacity: 0 },
-  center: {
-    z: 0, scale: 1, opacity: 1,
-    transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
-  },
-  exit: (dir) => dir > 0
-    ? { z: 0, scale: 1.18, opacity: 0, transition: { duration: 0.55, ease: [0.55, 0, 1, 0.45] } }
-    : { z: 0, scale: 0.9,  opacity: 0, transition: { duration: 0.55, ease: [0.55, 0, 1, 0.45] } },
+const THRESHOLD = 300
+
+function applyProgress(curEl, nxtEl, p, dir) {
+  if (curEl) {
+    if (dir > 0) {
+      curEl.style.transform = `translateZ(${p * 850}px)`
+      curEl.style.opacity   = String(Math.max(0, 1 - p * 2.2))
+    } else {
+      curEl.style.transform = `translateZ(${-p * 1800}px)`
+      curEl.style.opacity   = String(Math.max(0, 1 - p * 2.0))
+    }
+  }
+  if (nxtEl) {
+    if (dir > 0) {
+      nxtEl.style.transform = `translateZ(${-2400 + p * 2400}px)`
+      nxtEl.style.opacity   = String(Math.max(0, p * 2.5 - 0.9))
+    } else {
+      nxtEl.style.transform = `translateZ(${600 * (1 - p)}px)`
+      nxtEl.style.opacity   = String(Math.max(0, p * 2.5 - 0.8))
+    }
+  }
 }
 
+// Direct DOM helpers — bypass React scheduling for instant visual response
+const hideSlot = (el) => { if (el) { el.style.opacity = '0'; el.style.pointerEvents = 'none' } }
+const showSlot = (el) => { if (el) { el.style.opacity = '';  el.style.pointerEvents = '' } }
+
 export default function TunnelExperience() {
-  const [current, setCurrent] = useState(0)
-  const [dir, setDir] = useState(1)
-  const locked = useRef(false)
-  const touchY = useRef(null)
+  /**
+   * Dual-slot architecture:
+   *   slots[0/1]  — slideIdx rendered in each persistent div (null = empty)
+   *   activeSlot  — which slot is the "committed" current slide
+   *
+   * On commit we toggle activeSlot. The arrived slide was already in the DOM
+   * since startPreview, so it NEVER re-mounts — no animation replay.
+   */
+  const [slots, setSlots]           = useState([0, null])
+  const [activeSlot, setActiveSlot] = useState(0)
 
-  const navigate = useCallback((delta) => {
-    if (locked.current) return
-    const next = current + delta
-    if (next < 0 || next >= SLIDES.length) return
-    locked.current = true
-    setDir(delta > 0 ? 1 : -1)
-    setCurrent(next)
-    window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: delta > 0 ? 1 : -1 } }))
-    setTimeout(() => { locked.current = false }, 1600)
-  }, [current])
+  const ref0 = useRef(null)
+  const ref1 = useRef(null)
+  const slotRefs = [ref0, ref1]   // stable ref objects — safe to close over
 
-  const goTo = useCallback((index) => {
-    if (locked.current || index === current) return
-    locked.current = true
-    setDir(index > current ? 1 : -1)
-    setCurrent(index)
-    window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: index > current ? 1 : -1 } }))
-    setTimeout(() => { locked.current = false }, 1600)
-  }, [current])
+  const dirRef        = useRef(1)
+  const progress      = useRef(0)
+  const rafId         = useRef(null)
+  const inTransit     = useRef(false)
+  const hasPreview    = useRef(false)
+  const activeSlotRef = useRef(0)   // mirrors activeSlot; updated sync on commit
+  const scrollAccum   = useRef(0)
+  const touchY        = useRef(null)
 
+  // Init: hide the empty second slot
+  useEffect(() => { hideSlot(ref1.current) }, [])
+
+  // After React commits new pending-slot content, apply its initial 3-D position
   useEffect(() => {
-    const onWheel = (e) => { e.preventDefault(); navigate(e.deltaY > 0 ? 1 : -1) }
-    const onKey = (e) => {
-      if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); navigate(1) }
-      if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); navigate(-1) }
+    if (!hasPreview.current) return
+    const nxt = 1 - activeSlotRef.current
+    if (slots[nxt] === null) return
+    requestAnimationFrame(() => {
+      const a = activeSlotRef.current
+      applyProgress(slotRefs[a].current, slotRefs[1 - a].current, 0, dirRef.current)
+    })
+  }, [slots])
+
+  // ── Animation runners ──────────────────────────────────────────────────────
+
+  const commitTransition = useCallback(() => {
+    inTransit.current = true
+    if (rafId.current) cancelAnimationFrame(rafId.current)
+
+    const curSlot = activeSlotRef.current
+    const nxtSlot = 1 - curSlot
+
+    const tick = () => {
+      progress.current = Math.min(1, progress.current + 0.055)
+      applyProgress(
+        slotRefs[curSlot].current,
+        slotRefs[nxtSlot].current,
+        progress.current,
+        dirRef.current
+      )
+      if (progress.current < 1) {
+        rafId.current = requestAnimationFrame(tick)
+      } else {
+        // Promote pending slot → active; hide old slot — no React remount!
+        showSlot(slotRefs[nxtSlot].current)
+        hideSlot(slotRefs[curSlot].current)
+
+        activeSlotRef.current = nxtSlot   // sync ref update (immediate)
+        inTransit.current     = false
+        hasPreview.current    = false
+        progress.current      = 0
+        scrollAccum.current   = 0
+
+        // Batch both state updates into one React render (no setTimeout race)
+        setActiveSlot(nxtSlot)
+        setSlots(prev => { const s = [...prev]; s[curSlot] = null; return s })
+      }
     }
+    rafId.current = requestAnimationFrame(tick)
+  }, [])
+
+  const cancelTransition = useCallback(() => {
+    inTransit.current = true
+    if (rafId.current) cancelAnimationFrame(rafId.current)
+
+    const curSlot = activeSlotRef.current
+    const nxtSlot = 1 - curSlot
+
+    const tick = () => {
+      progress.current = Math.max(0, progress.current - 0.065)
+      applyProgress(
+        slotRefs[curSlot].current,
+        slotRefs[nxtSlot].current,
+        progress.current,
+        dirRef.current
+      )
+      if (progress.current > 0) {
+        rafId.current = requestAnimationFrame(tick)
+      } else {
+        showSlot(slotRefs[curSlot].current)
+        hideSlot(slotRefs[nxtSlot].current)
+
+        inTransit.current   = false
+        hasPreview.current  = false
+        progress.current    = 0
+        scrollAccum.current = 0
+
+        setSlots(prev => { const s = [...prev]; s[nxtSlot] = null; return s })
+      }
+    }
+    rafId.current = requestAnimationFrame(tick)
+  }, [])
+
+  // Load target slide into pending slot
+  const startPreview = useCallback((d, targetIdx) => {
+    const nxtSlot = 1 - activeSlotRef.current
+    dirRef.current     = d
+    hasPreview.current = true
+    progress.current   = 0
+    setSlots(prev => { const s = [...prev]; s[nxtSlot] = targetIdx; return s })
+  }, [])
+
+  const currentIdx = slots[activeSlot] ?? 0
+
+  // NavDot click: cancel any pending scroll preview, then commit to chosen slide
+  const goTo = useCallback((index) => {
+    if (inTransit.current || index === currentIdx) return
+    // If a scroll preview is in progress, cancel it first then start fresh
+    if (hasPreview.current) {
+      if (rafId.current) cancelAnimationFrame(rafId.current)
+      const nxtSlot = 1 - activeSlotRef.current
+      hideSlot(slotRefs[nxtSlot].current)
+      inTransit.current   = false
+      hasPreview.current  = false
+      progress.current    = 0
+      scrollAccum.current = 0
+      setSlots(prev => { const s = [...prev]; s[nxtSlot] = null; return s })
+    }
+    const d = index > currentIdx ? 1 : -1
+    startPreview(d, index)
+    window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: d } }))
+    requestAnimationFrame(() => requestAnimationFrame(() => commitTransition()))
+  }, [currentIdx, startPreview, commitTransition])
+
+  // ── Input events ───────────────────────────────────────────────────────────
+  useEffect(() => {
+    const onWheel = (e) => {
+      e.preventDefault()
+      if (inTransit.current) return
+
+      const isMouse = Math.abs(e.deltaY) > 50
+      const tick    = isMouse
+        ? Math.sign(e.deltaY) * 100
+        : Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 38)
+
+      scrollAccum.current += tick
+      scrollAccum.current  = Math.max(-THRESHOLD, Math.min(THRESHOLD, scrollAccum.current))
+
+      const d        = scrollAccum.current > 0 ? 1 : -1
+      const absAccum = Math.abs(scrollAccum.current)
+      const target   = currentIdx + d
+
+      if (target < 0 || target >= SLIDES.length) {
+        scrollAccum.current = 0
+        return
+      }
+
+      // First scroll: mount pending slide
+      if (!hasPreview.current) {
+        startPreview(d, target)
+        return
+      }
+
+      // Direction reversal: cancel preview
+      if (d !== dirRef.current) {
+        scrollAccum.current = 0
+        cancelTransition()
+        return
+      }
+
+      // Drive progress — view holds exactly where you stop scrolling
+      const p = Math.min(0.92, absAccum / THRESHOLD)
+      progress.current = p
+      const a = activeSlotRef.current
+      applyProgress(slotRefs[a].current, slotRefs[1 - a].current, p, dirRef.current)
+
+      // Commit at threshold
+      if (absAccum >= THRESHOLD) {
+        window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: d } }))
+        commitTransition()
+      }
+    }
+
+    const onKey = (e) => {
+      if (inTransit.current || hasPreview.current) return
+      const d = ['ArrowDown', 'PageDown', ' '].includes(e.key) ? 1
+              : ['ArrowUp', 'PageUp'].includes(e.key)          ? -1 : 0
+      if (!d) return
+      e.preventDefault()
+      const t = currentIdx + d
+      if (t < 0 || t >= SLIDES.length) return
+      startPreview(d, t)
+      window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: d } }))
+      requestAnimationFrame(() => requestAnimationFrame(() => commitTransition()))
+    }
+
     const onTouchStart = (e) => { touchY.current = e.touches[0].clientY }
-    const onTouchEnd = (e) => {
+    const onTouchEnd   = (e) => {
       if (touchY.current === null) return
-      const d = touchY.current - e.changedTouches[0].clientY
-      if (Math.abs(d) > 55) navigate(d > 0 ? 1 : -1)
+      const delta = touchY.current - e.changedTouches[0].clientY
+      if (Math.abs(delta) > 70 && !inTransit.current && !hasPreview.current) {
+        const d = delta > 0 ? 1 : -1
+        const t = currentIdx + d
+        if (t >= 0 && t < SLIDES.length) {
+          startPreview(d, t)
+          window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: d } }))
+          requestAnimationFrame(() => requestAnimationFrame(() => commitTransition()))
+        }
+      }
       touchY.current = null
     }
-    window.addEventListener('wheel', onWheel, { passive: false })
-    window.addEventListener('keydown', onKey)
-    window.addEventListener('touchstart', onTouchStart, { passive: true })
-    window.addEventListener('touchend', onTouchEnd, { passive: true })
-    return () => {
-      window.removeEventListener('wheel', onWheel)
-      window.removeEventListener('keydown', onKey)
-      window.removeEventListener('touchstart', onTouchStart)
-      window.removeEventListener('touchend', onTouchEnd)
-    }
-  }, [navigate])
 
-  const Slide = SLIDES[current].component
+    window.addEventListener('wheel',      onWheel,      { passive: false })
+    window.addEventListener('keydown',    onKey)
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchend',   onTouchEnd,   { passive: true })
+    return () => {
+      window.removeEventListener('wheel',      onWheel)
+      window.removeEventListener('keydown',    onKey)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchend',   onTouchEnd)
+    }
+  }, [currentIdx, startPreview, commitTransition, cancelTransition])
+
+  const SlideA = slots[0] !== null ? SLIDES[slots[0]].component : null
+  const SlideB = slots[1] !== null ? SLIDES[slots[1]].component : null
 
   return (
     <div className={styles.wrapper}>
 
-      {/* Header bar */}
       <header className={styles.header}>
         <div className={styles.logo}>SS<span className={styles.dot}>.</span></div>
         <motion.div
-          key={current}
+          key={currentIdx}
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className={styles.sectionLabel}
         >
-          {SLIDES[current].label}
+          {SLIDES[currentIdx].label}
         </motion.div>
         <a href="mailto:sambhav.sehgal.007@gmail.com" className={styles.hireBtn}>Hire Me</a>
       </header>
 
-      {/* 3D Viewport — perspective lives here */}
       <div className={styles.viewport}>
-        <AnimatePresence mode="wait" custom={dir}>
-          <motion.div
-            key={current}
-            custom={dir}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className={styles.slide}
-          >
-            <Slide />
-          </motion.div>
-        </AnimatePresence>
+        {/* Slot 0 — persistent, never unmounted mid-transition */}
+        <div ref={ref0} className={styles.slide}>
+          {SlideA && <SlideA />}
+        </div>
+        {/* Slot 1 — persistent, never unmounted mid-transition */}
+        <div ref={ref1} className={styles.slide}>
+          {SlideB && <SlideB />}
+        </div>
       </div>
 
-      {/* Right-side nav dots */}
-      <NavDots slides={SLIDES} current={current} goTo={goTo} />
+      <NavDots slides={SLIDES} current={currentIdx} goTo={goTo} />
 
-      {/* Bottom bar */}
       <div className={styles.bottomBar}>
         <div className={styles.counter}>
-          <span className={styles.cCurrent}>{String(current + 1).padStart(2, '0')}</span>
+          <span className={styles.cCurrent}>{String(currentIdx + 1).padStart(2, '0')}</span>
           <span className={styles.cSep}>/</span>
           <span className={styles.cTotal}>{String(SLIDES.length).padStart(2, '0')}</span>
         </div>
-
-        {current < SLIDES.length - 1 && (
+        {currentIdx < SLIDES.length - 1 && (
           <motion.button
             className={styles.scrollHint}
-            onClick={() => navigate(1)}
+            onClick={() => goTo(currentIdx + 1)}
             animate={{ y: [0, 7, 0] }}
             transition={{ repeat: Infinity, duration: 1.9 }}
           >

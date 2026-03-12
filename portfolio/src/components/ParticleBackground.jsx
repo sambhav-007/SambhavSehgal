@@ -9,9 +9,8 @@ export default function ParticleBackground() {
     const ctx = canvas.getContext('2d')
     let animationId
     let particles = []
-    // warpFactor: 0 = normal drift, 1 = full warp; warpDir: 1 = outward, -1 = inward
-    let warpFactor = 0
-    let warpDir = 1
+    // scrollVel: positive = outward (forward), negative = inward (backward), decays to 0
+    let scrollVel = 0
 
     const resize = () => {
       canvas.width = window.innerWidth
@@ -20,79 +19,109 @@ export default function ParticleBackground() {
     resize()
     window.addEventListener('resize', resize)
 
-    class Particle {
-      constructor() { this.reset() }
-      reset() {
-        this.x = Math.random() * canvas.width
-        this.y = Math.random() * canvas.height
-        this.size = Math.random() * 1.5 + 0.5
-        this.speedX = (Math.random() - 0.5) * 0.4
-        this.speedY = (Math.random() - 0.5) * 0.4
-        this.opacity = Math.random() * 0.55 + 0.15
+    // ── True 3-D starfield ──────────────────────────────────────────────────
+    // Each star lives at (x3, y3, z) in 3-D space centred on the screen.
+    // Perspective projection: sx = x3/z * FOV + cx   (same for y)
+    // z decreases each frame (star rushes toward viewer); when z ≤ 0 it recycles.
+    //
+    // scrollVel > 0 (forward)  → z decreases faster  (speed up)
+    // scrollVel < 0 (backward) → z increases          (pull back)
+    // scrollVel = 0            → constant slow cruise
+    // ────────────────────────────────────────────────────────────────────────
+    const FOV      = 300   // perspective focal length (px)
+    const Z_FAR    = 900   // spawn depth
+    const Z_NEAR   = 1     // recycle threshold (nearly at viewer)
+    const BASE_DZ  = 2.0   // default z-decrease per frame (slower)
+
+    class Star {
+      constructor(randomZ) { this.reset(randomZ) }
+      reset(randomZ) {
+        // 3-D position: x/y spread across a box, z = depth
+        this.x3 = (Math.random() - 0.5) * canvas.width  * 2.2
+        this.y3 = (Math.random() - 0.5) * canvas.height * 2.2
+        this.z  = randomZ
+          ? Math.random() * Z_FAR                        // initial: spread everywhere
+          : Z_FAR * (0.5 + Math.random() * 0.5)         // recycle: random in far half [450-900]
+
+        this.size    = Math.random() * 1.6 + 0.6
+        this.opacity = Math.random() * 0.3 + 0.7   // high base brightness
+        this.prevSx  = null
+        this.prevSy  = null
       }
-      update() {
-        this.x += this.speedX
-        this.y += this.speedY
-        // Warp: rush outward or inward from screen center
-        if (warpFactor > 0.01) {
-          const cx = canvas.width / 2
-          const cy = canvas.height / 2
-          const dx = this.x - cx
-          const dy = this.y - cy
-          const dist = Math.sqrt(dx * dx + dy * dy) || 1
-          const push = warpFactor * 10 * warpDir
-          this.x += (dx / dist) * push
-          this.y += (dy / dist) * push
-        }
-        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset()
+
+      update(dz) {
+        const cx = canvas.width  / 2
+        const cy = canvas.height / 2
+        this.prevSx = this.x3 / this.z * FOV + cx
+        this.prevSy = this.y3 / this.z * FOV + cy
+
+        this.z -= dz
+        if (this.z <= Z_NEAR) this.reset(false)
+        if (this.z > Z_FAR)   this.reset(false)
       }
+
       draw() {
-        const alpha = this.opacity + warpFactor * 0.5
+        const cx = canvas.width  / 2
+        const cy = canvas.height / 2
+
+        const sx  = this.x3 / this.z  * FOV + cx
+        const sy  = this.y3 / this.z  * FOV + cy
+
+        // Size grows as star gets closer (smaller z = bigger)
+        const scale  = FOV / this.z
+        const radius = Math.min(this.size * scale, 5)
+        // Bright from midway; fully opaque in the near half
+        const progress = 1 - this.z / Z_FAR          // 0=far, 1=near
+        const alpha  = Math.min(this.opacity * (0.3 + progress * 0.9), 1)
+
+        // Trail from previous position to current
+        if (this.prevSx !== null && (Math.abs(sx - this.prevSx) + Math.abs(sy - this.prevSy)) > 0.5) {
+          const grad = ctx.createLinearGradient(this.prevSx, this.prevSy, sx, sy)
+          grad.addColorStop(0, `rgba(255,255,255,0)`)
+          grad.addColorStop(1, `rgba(255,255,255,${Math.min(alpha * 1.2, 1)})`)
+          ctx.beginPath()
+          ctx.moveTo(this.prevSx, this.prevSy)
+          ctx.lineTo(sx, sy)
+          ctx.strokeStyle = grad
+          ctx.lineWidth   = radius * 1.4
+          ctx.lineCap     = 'round'
+          ctx.stroke()
+        }
+
+        // Star dot
         ctx.beginPath()
-        ctx.arc(this.x, this.y, this.size + warpFactor * 1.2, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255,255,255,${Math.min(alpha, 1)})`
+        ctx.arc(sx, sy, Math.max(radius, 0.4), 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`
         ctx.fill()
       }
     }
 
-    for (let i = 0; i < 120; i++) particles.push(new Particle())
+    for (let i = 0; i < 160; i++) particles.push(new Star(true))
 
-    const connectParticles = () => {
-      const threshold = warpFactor > 0.1 ? 80 : 120
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x
-          const dy = particles[i].y - particles[j].y
-          const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < threshold) {
-            ctx.beginPath()
-            ctx.strokeStyle = `rgba(255,255,255,${(0.08 + warpFactor * 0.12) * (1 - dist / threshold)})`
-            ctx.lineWidth = 0.5
-            ctx.moveTo(particles[i].x, particles[i].y)
-            ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.stroke()
-          }
-        }
-      }
-    }
-
-    // Decay warp back to 0 each frame
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      warpFactor *= 0.91   // decay — warp lasts ~700ms
-      if (warpFactor < 0.005) warpFactor = 0
-      particles.forEach(p => { p.update(); p.draw() })
-      connectParticles()
+      ctx.fillStyle = 'rgba(0,0,0,0.14)'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      // dz: z-decrease per frame — scrollVel boosts or reverses it
+      const dz = BASE_DZ + scrollVel * 14
+      scrollVel *= 0.92
+      if (Math.abs(scrollVel) < 0.003) scrollVel = 0
+
+      particles.forEach(p => { p.update(dz); p.draw() })
       animationId = requestAnimationFrame(animate)
     }
     animate()
 
-    const onWarp = (e) => { warpFactor = 1; warpDir = e.detail?.dir ?? 1 }
-    window.addEventListener('tunnelwarp', onWarp)
+    const onWheel = (e) => {
+      // Forward scroll → faster rush toward viewer; backward → retreat into depth
+      const contrib = Math.sign(e.deltaY) * Math.min(Math.abs(e.deltaY), 60) / 60 * 0.45
+      scrollVel = Math.max(-1, Math.min(1, scrollVel + contrib))
+    }
+    window.addEventListener('wheel', onWheel, { passive: true })
 
     return () => {
       window.removeEventListener('resize', resize)
-      window.removeEventListener('tunnelwarp', onWarp)
+      window.removeEventListener('wheel', onWheel)
       cancelAnimationFrame(animationId)
     }
   }, [])
