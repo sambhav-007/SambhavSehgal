@@ -3,27 +3,16 @@ import s from './slides.module.css'
 
 const JOBS = [
   {
-    role: 'Full-Stack Developer',
+    role: 'Website Developer & Digital Media Manager',
     company: 'Dua Property',
     period: 'Oct 2025 – Present',
     type: 'Freelance',
     color: '#a855f7',
+    tech: ['React', 'Tailwind CSS', 'SEO', 'Web Hosting', 'Digital Marketing'],
     points: [
-      'Built SEO-optimised property listing website from scratch',
-      'Designed fully responsive UI with modern landing page',
-      'Managed digital media integration and client workflows',
-    ],
-  },
-  {
-    role: 'Full-Stack Developer',
-    company: 'Kabana Resort',
-    period: 'Jan 2025 – Sep 2025',
-    type: 'Freelance',
-    color: '#06b6d4',
-    points: [
-      'Delivered production hospitality website through full SDLC',
-      'Implemented booking UI, gallery, and contact integrations',
-      'Coordinated with client through requirements to deployment',
+      'Built a production-ready real estate platform with SEO-optimized property listings',
+      'Developed responsive landing pages and lead-capture forms improving client inquiries',
+      'Integrated media management, contact workflows, and client automation tools',
     ],
   },
   {
@@ -32,12 +21,27 @@ const JOBS = [
     period: 'Sep 2025 – Present',
     type: 'Volunteering',
     color: '#22c55e',
+    tech: ['Git', 'GitHub', 'Open Source', 'Public Speaking', 'Event Planning'],
     points: [
-      'Organizing open-source community events and workshops',
-      'Connecting developers, beginners, and industry leads',
-      'Fostering collaborative open-source contributions',
+      'Organized developer meetups, workshops, and open-source learning sessions',
+      'Connected students, developers, and industry professionals in the local tech ecosystem',
+      'Encouraged collaboration and contributions to open-source projects',
     ],
   },
+  {
+    role: 'Website Developer',
+    company: 'Kabana de Nature',
+    period: 'Jan 2025 – Sep 2025',
+    type: 'Freelance',
+    color: '#06b6d4',
+    tech: ['HTML','CSS','JavaScript', 'SEO', 'DNS', 'Bootstrap', 'PHP'],
+    points: [
+      'Developed the official resort website from concept to deployment',
+      'Implemented booking UI, gallery system, and customer contact integrations',
+      'Delivered a responsive hospitality website optimized for mobile users',
+    ],
+  },
+  
 ]
 
 function Content() {
@@ -53,7 +57,7 @@ function Content() {
                 {' · '}<span style={{ background: `${j.color}1a`, color: j.color, fontSize: '0.68rem', padding: '1px 7px', borderRadius: 10 }}>{j.type}</span>
               </div>
             </div>
-            <span style={{ fontSize: '0.72rem', color: '#475569', fontFamily: 'JetBrains Mono, monospace', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: '0.72rem', color: '#ffffff', fontFamily: 'JetBrains Mono, monospace', whiteSpace: 'nowrap' }}>
               {j.period}
             </span>
           </div>
@@ -65,6 +69,19 @@ function Content() {
               </li>
             ))}
           </ul>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginTop: 6 }}>
+            {j.tech.map((t) => (
+              <span key={t} style={{
+                fontSize: '0.65rem',
+                fontFamily: 'JetBrains Mono, monospace',
+                color: j.color,
+                background: `${j.color}14`,
+                border: `1px solid ${j.color}33`,
+                borderRadius: 5,
+                padding: '1px 7px',
+              }}>{t}</span>
+            ))}
+          </div>
         </div>
       ))}
     </div>

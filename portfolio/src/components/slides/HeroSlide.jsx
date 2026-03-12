@@ -166,10 +166,10 @@ export default function HeroSlide() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.9 }}
       >
-        <a href="https://www.linkedin.com/in/sambhav-sehgal-8b6a04259/" target="_blank" rel="noopener noreferrer" className="btn-primary">
+        <a href="https://www.linkedin.com/in/sambhav-sehgal-35896a334/" target="_blank" rel="noopener noreferrer" className="btn-primary">
           <FiLinkedin size={16} /> LinkedIn
         </a>
-        <a href="https://github.com/SambhavSehgal" target="_blank" rel="noopener noreferrer" className="btn-outline">
+        <a href="https://github.com/sambhav-007" target="_blank" rel="noopener noreferrer" className="btn-outline">
           <FiGithub size={16} /> GitHub
         </a>
         <a href="https://leetcode.com/u/sambhavsehgal/" target="_blank" rel="noopener noreferrer" className="btn-outline">
