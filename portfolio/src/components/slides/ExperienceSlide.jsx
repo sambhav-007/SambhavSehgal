@@ -5,6 +5,7 @@ const JOBS = [
   {
     role: 'Website Developer & Digital Media Manager',
     company: 'Dua Property',
+    logo: '/logos/dua-property.jpg',
     period: 'Oct 2025 – Present',
     type: 'Freelance',
     color: '#a855f7',
@@ -18,8 +19,9 @@ const JOBS = [
   {
     role: 'Community Organizer',
     company: 'Open Source Chandigarh',
+    logo: '/logos/open-source-chandigarh.png',
     period: 'Sep 2025 – Present',
-    type: 'Volunteering',
+    type: 'Community Member',
     color: '#22c55e',
     tech: ['Git', 'GitHub', 'Open Source', 'Public Speaking', 'Event Planning'],
     points: [
@@ -31,6 +33,7 @@ const JOBS = [
   {
     role: 'Website Developer',
     company: 'Kabana de Nature',
+    logo: '/logos/kabana-de-nature.png',
     period: 'Jan 2025 – Sep 2025',
     type: 'Freelance',
     color: '#06b6d4',
@@ -53,7 +56,17 @@ function Content() {
             <div>
               <div className={s.expRole}>{j.role}</div>
               <div className={s.expMeta}>
-                <span style={{ color: j.color }}>{j.company}</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: j.color }}>
+                  {j.logo && (
+                    <img
+                      src={j.logo}
+                      alt={j.company}
+                      style={{ width: 16, height: 16, objectFit: 'contain', borderRadius: 3, flexShrink: 0 }}
+                      onError={(e) => { e.currentTarget.style.display = 'none' }}
+                    />
+                  )}
+                  {j.company}
+                </span>
                 {' · '}<span style={{ background: `${j.color}1a`, color: j.color, fontSize: '0.68rem', padding: '1px 7px', borderRadius: 10 }}>{j.type}</span>
               </div>
             </div>

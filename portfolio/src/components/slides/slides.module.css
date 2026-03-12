@@ -444,7 +444,7 @@
   transition: all 0.25s;
 }
 
-.traitCard:hover { border-color: rgba(124,58,237,0.4); transform: translateY(-4px); }
+.traitCard:hover { border-color: rgba(124,58,237,0.4); }
 
 .traitIcon {
   display: inline-flex;

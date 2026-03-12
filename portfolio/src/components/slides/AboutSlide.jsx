@@ -2,31 +2,32 @@ import TunnelSlide from '../TunnelSlide'
 import s from './slides.module.css'
 
 const TRAITS = [
-  { icon: '⚡', title: 'Full-Stack Dev', desc: 'End-to-end products from UI to DB and deployment' },
-  { icon: '🚀', title: 'Fast Learner', desc: 'Grasps new technologies and frameworks quickly' },
-  { icon: '🎙️', title: 'Public Speaker', desc: 'Engaging communicator, community organizer' },
-  { icon: '💡', title: 'Product Thinker', desc: 'User-first mindset, focused on real-world impact' },
+  { icon: '⚡', title: 'Full-Stack Dev', desc: 'Builds end-to-end applications from UI to backend and deployment.' },
+  { icon: '🚀', title: 'Fast Learner', desc: 'Quickly adapts to new technologies and development tools.' },
+  { icon: '🎙️', title: 'Public Speaker', desc: 'Experienced in public speaking, debates, and tech community engagement.' },
+  { icon: '💡', title: 'Product Thinker', desc: 'Focused on building products that solve real-world problems.' },
 ]
 
 function Left() {
   return (
     <>
       <p className={s.bio}>
-        I'm a <span className={s.hl}>B.E. Computer Science</span> student at Chitkara University (2024–28),
-        passionate about building products that solve real problems. I've delivered production-grade
-        applications for clients across hospitality and real estate.
+        I'm a <span className={s.hl}>B.E. Computer Science</span> student at Chitkara University (2024–28)
+        who enjoys building real-world digital products. I've developed production-ready applications
+        for industries like hospitality and real estate, focusing on performance, usability, and modern design.
       </p>
       <p className={s.bio}>
-        I work across the full stack — from pixel-perfect UIs to robust APIs — and I love combining
-        AI with traditional engineering to make smarter software.
+        As a full-stack developer, I work across the entire product lifecycle — from crafting intuitive
+        interfaces to designing scalable backend systems. I'm particularly interested in combining AI
+        with traditional software engineering to create smarter applications.
       </p>
 
       <div className={s.infoGrid}>
         {[
-          ['Location', 'Ambala, Haryana'],
+          ['Location', 'Ambala, Haryana, India'],
           ['University', 'Chitkara University'],
-          ['Degree', 'B.E. CSE (2024-28)'],
-          ['Email', 'sambhav.sehgal.007'],
+          ['Degree', 'B.E. Computer Science (2024–2028)'],
+          ['Email', 'sambhav.sehgal.007@gmail.com'],
         ].map(([lbl, val]) => (
           <div key={lbl} className={s.infoItem}>
             <span className={s.infoLbl}>{lbl}</span>
@@ -57,6 +58,7 @@ export default function AboutSlide() {
     <TunnelSlide
       tag="// about me"
       title="Who I Am"
+      subtitle="Full-Stack Developer building real-world digital products"
       left={<Left />}
       right={<Right />}
     />

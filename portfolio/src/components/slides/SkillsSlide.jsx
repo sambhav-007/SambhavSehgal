@@ -24,7 +24,7 @@ const GROUPS = [
     name: '🌐 Frontend',
     color: '#06b6d4',
     bg: 'rgba(6,182,212,0.08)',
-    tags: ['HTML', 'CSS', 'React', 'Tailwind CSS', 'Framer Motion', 'Vite'],
+    tags: ['HTML', 'CSS', 'React', 'Tailwind CSS','Bootstrap', 'Framer Motion', 'Vite'],
   },
   {
     name: '⚙️ Backend',
@@ -42,7 +42,7 @@ const GROUPS = [
     name: '🤖 AI / CV',
     color: '#ec4899',
     bg: 'rgba(236,72,153,0.08)',
-    tags: ['OpenCV', 'EasyOCR', 'ML Pipelines'],
+    tags: ['OpenCV', 'EasyOCR', 'dlib','Face Recognition', 'Google Gemini AI'],
   },
   {
     name: '🔌 IoT / Systems',
