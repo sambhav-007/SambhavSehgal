@@ -21,21 +21,18 @@ const SLIDES = [
 ]
 
 const variants = {
-  enter: (dir) => ({
-    z:     dir > 0 ? -2200 : 1200,
-    scale: dir > 0 ? 0.12  : 1.9,
-    opacity: 0,
-  }),
+  // Forward (dive in): enter tiny from far back, exit large toward camera
+  // Backward (dive out): enter slightly large, exit slightly small — no z to avoid perspective overflow
+  enter: (dir) => dir > 0
+    ? { z: -2200, scale: 0.12, opacity: 0 }
+    : { z: 0, scale: 1.14, opacity: 0 },
   center: {
     z: 0, scale: 1, opacity: 1,
-    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
   },
-  exit: (dir) => ({
-    z:     dir > 0 ? 1200 : -2200,
-    scale: dir > 0 ? 1.9  : 0.12,
-    opacity: 0,
-    transition: { duration: 0.6, ease: [0.55, 0, 1, 0.45] },
-  }),
+  exit: (dir) => dir > 0
+    ? { z: 0, scale: 1.18, opacity: 0, transition: { duration: 0.55, ease: [0.55, 0, 1, 0.45] } }
+    : { z: 0, scale: 0.9,  opacity: 0, transition: { duration: 0.55, ease: [0.55, 0, 1, 0.45] } },
 }
 
 export default function TunnelExperience() {
@@ -51,7 +48,7 @@ export default function TunnelExperience() {
     locked.current = true
     setDir(delta > 0 ? 1 : -1)
     setCurrent(next)
-    window.dispatchEvent(new CustomEvent('tunnelwarp'))
+    window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: delta > 0 ? 1 : -1 } }))
     setTimeout(() => { locked.current = false }, 1600)
   }, [current])
 
@@ -60,7 +57,7 @@ export default function TunnelExperience() {
     locked.current = true
     setDir(index > current ? 1 : -1)
     setCurrent(index)
-    window.dispatchEvent(new CustomEvent('tunnelwarp'))
+    window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: index > current ? 1 : -1 } }))
     setTimeout(() => { locked.current = false }, 1600)
   }, [current])
 

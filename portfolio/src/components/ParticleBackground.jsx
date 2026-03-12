@@ -9,8 +9,9 @@ export default function ParticleBackground() {
     const ctx = canvas.getContext('2d')
     let animationId
     let particles = []
-    // warpFactor: 0 = normal drift, 1 = full warp
+    // warpFactor: 0 = normal drift, 1 = full warp; warpDir: 1 = outward, -1 = inward
     let warpFactor = 0
+    let warpDir = 1
 
     const resize = () => {
       canvas.width = window.innerWidth
@@ -32,14 +33,14 @@ export default function ParticleBackground() {
       update() {
         this.x += this.speedX
         this.y += this.speedY
-        // Warp: rush outward from screen center
+        // Warp: rush outward or inward from screen center
         if (warpFactor > 0.01) {
           const cx = canvas.width / 2
           const cy = canvas.height / 2
           const dx = this.x - cx
           const dy = this.y - cy
           const dist = Math.sqrt(dx * dx + dy * dy) || 1
-          const push = warpFactor * 10
+          const push = warpFactor * 10 * warpDir
           this.x += (dx / dist) * push
           this.y += (dy / dist) * push
         }
@@ -86,7 +87,7 @@ export default function ParticleBackground() {
     }
     animate()
 
-    const onWarp = () => { warpFactor = 1 }
+    const onWarp = (e) => { warpFactor = 1; warpDir = e.detail?.dir ?? 1 }
     window.addEventListener('tunnelwarp', onWarp)
 
     return () => {
