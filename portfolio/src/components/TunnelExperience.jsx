@@ -27,24 +27,36 @@ const SLIDES = [
 ]
 
 const THRESHOLD = 300
+const PREVIEW_START_THRESHOLD = 24
+const EDGE_REENTRY_THRESHOLD = 95
+const COMMIT_DURATION_MS = 520
+const CANCEL_DURATION_MS = 320
+
+const clamp01 = (v) => Math.max(0, Math.min(1, v))
+const smoothstep = (t) => {
+  const x = clamp01(t)
+  return x * x * (3 - 2 * x)
+}
 
 function applyProgress(curEl, nxtEl, p, dir) {
+  const pe = smoothstep(p)
+
   if (curEl) {
     if (dir > 0) {
-      curEl.style.transform = `translateZ(${p * 850}px)`
-      curEl.style.opacity   = String(Math.max(0, 1 - p * 2.2))
+      curEl.style.transform = `translateZ(${pe * 850}px)`
+      curEl.style.opacity   = String(1 - smoothstep(pe / 0.62))
     } else {
-      curEl.style.transform = `translateZ(${-p * 1800}px)`
-      curEl.style.opacity   = String(Math.max(0, 1 - p * 2.0))
+      curEl.style.transform = `translateZ(${-pe * 1800}px)`
+      curEl.style.opacity   = String(1 - smoothstep(pe / 0.68))
     }
   }
   if (nxtEl) {
     if (dir > 0) {
-      nxtEl.style.transform = `translateZ(${-2400 + p * 2400}px)`
-      nxtEl.style.opacity   = String(Math.max(0, p * 2.5 - 0.9))
+      nxtEl.style.transform = `translateZ(${-2400 + pe * 2400}px)`
+      nxtEl.style.opacity   = String(smoothstep((pe - 0.06) / 0.64))
     } else {
-      nxtEl.style.transform = `translateZ(${600 * (1 - p)}px)`
-      nxtEl.style.opacity   = String(Math.max(0, p * 2.5 - 0.8))
+      nxtEl.style.transform = `translateZ(${600 * (1 - pe)}px)`
+      nxtEl.style.opacity   = String(smoothstep((pe - 0.05) / 0.66))
     }
   }
 }
@@ -102,16 +114,22 @@ export default function TunnelExperience() {
 
     const curSlot = activeSlotRef.current
     const nxtSlot = 1 - curSlot
+    const startProgress = progress.current
+    let startTs = null
 
-    const tick = () => {
-      progress.current = Math.min(1, progress.current + 0.055)
+    const tick = (ts) => {
+      if (startTs === null) startTs = ts
+      const t = Math.min((ts - startTs) / COMMIT_DURATION_MS, 1)
+      const eased = 1 - Math.pow(1 - t, 3)
+      progress.current = startProgress + (1 - startProgress) * eased
+
       applyProgress(
         slotRefs[curSlot].current,
         slotRefs[nxtSlot].current,
         progress.current,
         dirRef.current
       )
-      if (progress.current < 1) {
+      if (t < 1) {
         rafId.current = requestAnimationFrame(tick)
       } else {
         // Promote pending slot → active; hide old slot — no React remount!
@@ -140,16 +158,22 @@ export default function TunnelExperience() {
 
     const curSlot = activeSlotRef.current
     const nxtSlot = 1 - curSlot
+    const startProgress = progress.current
+    let startTs = null
 
-    const tick = () => {
-      progress.current = Math.max(0, progress.current - 0.065)
+    const tick = (ts) => {
+      if (startTs === null) startTs = ts
+      const t = Math.min((ts - startTs) / CANCEL_DURATION_MS, 1)
+      const eased = 1 - Math.pow(1 - t, 3)
+      progress.current = startProgress * (1 - eased)
+
       applyProgress(
         slotRefs[curSlot].current,
         slotRefs[nxtSlot].current,
         progress.current,
         dirRef.current
       )
-      if (progress.current > 0) {
+      if (t < 1) {
         rafId.current = requestAnimationFrame(tick)
       } else {
         showSlot(slotRefs[curSlot].current)
@@ -177,6 +201,7 @@ export default function TunnelExperience() {
   }, [])
 
   const currentIdx = slots[activeSlot] ?? 0
+  const navCurrent = pendingIdxRef.current ?? currentIdx
 
   // NavDot click: cancel any pending scroll preview, then commit to chosen slide
   const goTo = useCallback((index) => {
@@ -204,6 +229,17 @@ export default function TunnelExperience() {
       e.preventDefault()
       if (inTransit.current) return
 
+      // Ignore extra scroll at bounds so inertial wheel events don't trigger
+      // a preview in the opposite direction (e.g., Contact -> Achievements).
+      if (!hasPreview.current) {
+        const atFirst = currentIdxRef.current === 0
+        const atLast  = currentIdxRef.current === SLIDES.length - 1
+        if ((atFirst && e.deltaY < 0) || (atLast && e.deltaY > 0)) {
+          scrollAccum.current = 0
+          return
+        }
+      }
+
       const isMouse = Math.abs(e.deltaY) > 50
       const tick    = isMouse
         ? Math.sign(e.deltaY) * 100
@@ -223,6 +259,13 @@ export default function TunnelExperience() {
 
       // First scroll: mount pending slide
       if (!hasPreview.current) {
+        // Keep normal navigation snappy, but require stronger intent when
+        // re-entering from an edge slide (first/last) to block inertial bounce.
+        const atFirst = currentIdxRef.current === 0
+        const atLast  = currentIdxRef.current === SLIDES.length - 1
+        const isEdgeReentry = (atFirst && d > 0) || (atLast && d < 0)
+        const minStart = isEdgeReentry ? EDGE_REENTRY_THRESHOLD : PREVIEW_START_THRESHOLD
+        if (absAccum < minStart) return
         startPreview(d, target)
         return
       }
@@ -320,7 +363,7 @@ export default function TunnelExperience() {
       </div>
 
       <ScrollProgress current={currentIdx} total={SLIDES.length} />
-      <NavDots slides={SLIDES} current={currentIdx} goTo={goTo} />
+      <NavDots slides={SLIDES} current={navCurrent} goTo={goTo} />
 
       <div className={styles.bottomBar}>
         <div className={styles.counter}>
