@@ -43,19 +43,44 @@
 }
 
 .hireBtn {
-  padding: 8px 22px;
-  border-radius: 50px;
-  background: linear-gradient(135deg, #7c3aed, #06b6d4);
-  color: white;
-  font-weight: 600;
-  font-size: 0.82rem;
-  transition: all 0.3s;
-  box-shadow: 0 4px 20px rgba(124,58,237,0.25);
+  position: relative;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(rgba(10, 10, 26, 0.78), rgba(10, 10, 26, 0.78)) padding-box,
+    linear-gradient(135deg, rgba(168,85,247,0.95), rgba(34,211,238,0.95)) border-box;
+  color: #f8fafc;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  box-shadow:
+    0 8px 28px rgba(124,58,237,0.26),
+    inset 0 0 0 1px rgba(255,255,255,0.08);
 }
 
 .hireBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 28px rgba(124,58,237,0.45);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    0 12px 32px rgba(124,58,237,0.38),
+    0 0 18px rgba(34,211,238,0.26),
+    inset 0 0 0 1px rgba(255,255,255,0.12);
+  filter: brightness(1.06);
+}
+
+.hireBtn:active {
+  transform: translateY(0) scale(0.985);
+}
+
+.hireBtn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(10,10,26,0.92),
+    0 0 0 4px rgba(34,211,238,0.45),
+    0 10px 28px rgba(124,58,237,0.3);
 }
 
 /* ── 3D Viewport ── */
@@ -142,8 +167,8 @@
   }
 
   .hireBtn {
-    padding: 8px 14px;
-    font-size: 0.76rem;
+    padding: 8px 13px;
+    font-size: 0.74rem;
     white-space: nowrap;
   }
 
@@ -172,8 +197,8 @@
   }
 
   .hireBtn {
-    padding: 8px 12px;
-    font-size: 0.74rem;
+    padding: 7px 11px;
+    font-size: 0.72rem;
   }
 
   .bottomBar {
