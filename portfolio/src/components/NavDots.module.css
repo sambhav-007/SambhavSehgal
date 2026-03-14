@@ -39,3 +39,35 @@
   font-family: 'JetBrains Mono', monospace;
   white-space: nowrap;
 }
+
+@media (max-width: 900px) {
+  .nav {
+    right: 10px;
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 6px 4px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .label {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav {
+    right: 8px;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+  }
+}

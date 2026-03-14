@@ -69,3 +69,21 @@
   .panels { grid-template-columns: 1fr; }
   .wrapper { padding: 72px 20px 55px; }
 }
+
+@media (max-width: 600px) {
+  .wrapper {
+    padding: 80px 14px 88px;
+  }
+
+  .header {
+    margin-bottom: 14px;
+  }
+
+  .subtitle {
+    font-size: 0.82rem;
+  }
+
+  .panels {
+    gap: 14px;
+  }
+}

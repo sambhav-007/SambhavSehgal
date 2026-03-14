@@ -743,20 +743,19 @@
   }
   .layout {
     grid-template-columns: 1fr;
-    overflow-y: auto;
+    grid-template-rows: minmax(0, 52vh) minmax(0, 1fr);
+    overflow: hidden;
   }
   .machineScene {
-    padding: 16px 8px 10px;
+    padding: 8px 6px;
+    max-height: 52vh;
   }
   .machine {
-    width: min(92vw, 360px);
-    transform: perspective(900px) rotateY(-5deg) rotateX(1deg);
+    width: min(86vw, 300px);
+    transform: perspective(900px) rotateY(-3deg) rotateX(1deg);
   }
   .machine::after {
-    top: 8px;
-    right: -40px;
-    width: 42px;
-    bottom: 8px;
+    display: none;
   }
   .glassPanel {
     min-height: 0;
@@ -764,16 +763,30 @@
   .cartPanel {
     border-left: none;
     border-top: 1px solid rgba(124, 58, 237, 0.15);
+    min-height: 0;
+    overflow: hidden;
   }
   .cartHeader {
     padding: 12px 14px 10px;
   }
   .cartBody {
-    min-height: 180px;
-    max-height: 36vh;
+    min-height: 0;
+    max-height: none;
+    flex: 1;
   }
   .cartFooter {
-    padding: 12px 14px 14px;
+    padding: 10px 12px 12px;
+    position: sticky;
+    bottom: 0;
+    background: #060618;
+    z-index: 2;
+  }
+  .payBtn {
+    padding: 11px;
+    margin-bottom: 8px;
+  }
+  .emptyCart {
+    min-height: 120px;
   }
 
   .checkoutOverlay {
@@ -806,12 +819,8 @@
 
 @media (max-width: 420px) {
   .machine {
-    width: min(94vw, 320px);
-    transform: perspective(900px) rotateY(-4deg) rotateX(1deg);
-  }
-  .machine::after {
-    right: -34px;
-    width: 34px;
+    width: min(88vw, 270px);
+    transform: perspective(900px) rotateY(-2deg) rotateX(1deg);
   }
   .snackName {
     font-size: 0.54rem;
