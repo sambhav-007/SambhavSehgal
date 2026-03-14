@@ -9,7 +9,6 @@ export default function NavDots({ slides, current, goTo }) {
           key={slide.id}
           className={styles.btn}
           onClick={() => goTo(i)}
-          title={slide.label}
         >
           <motion.div
             className={styles.dot}
@@ -26,17 +25,9 @@ export default function NavDots({ slides, current, goTo }) {
                 : 'rgba(148,163,184,0.25)',
             }}
           />
-          {i === current && (
-            <motion.span
-              className={styles.label}
-              initial={{ opacity: 0, x: 8 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {slide.label}
-            </motion.span>
-          )}
+          <span className={`${styles.label} ${i === current ? styles.labelActive : ''}`}>
+            {slide.label}
+          </span>
         </button>
       ))}
     </nav>
