@@ -4,7 +4,8 @@
 // so its content / animations never replay.
 // ─────────────────────────────────────────────────────────────────────────────
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
+import VendingMachine from './VendingMachine'
 import NavDots from './NavDots'
 import HeroSlide from './slides/HeroSlide'
 import AboutSlide from './slides/AboutSlide'
@@ -64,6 +65,7 @@ export default function TunnelExperience() {
    */
   const [slots, setSlots]           = useState([0, null])
   const [activeSlot, setActiveSlot] = useState(0)
+  const [showVending, setShowVending] = useState(false)
 
   const ref0 = useRef(null)
   const ref1 = useRef(null)
@@ -305,7 +307,7 @@ export default function TunnelExperience() {
         >
           {SLIDES[currentIdx].label}
         </motion.div>
-        <a href="mailto:sambhav.sehgal.007@gmail.com" className={styles.hireBtn}>Hire Me</a>
+        <button className={styles.hireBtn} onClick={() => setShowVending(true)}>🍫 Buy Me a Snack</button>
       </header>
 
       <div className={styles.viewport}>
@@ -321,6 +323,10 @@ export default function TunnelExperience() {
 
       <ScrollProgress current={currentIdx} total={SLIDES.length} />
       <NavDots slides={SLIDES} current={currentIdx} goTo={goTo} />
+
+      <AnimatePresence>
+        {showVending && <VendingMachine onClose={() => setShowVending(false)} />}
+      </AnimatePresence>
 
       <div className={styles.bottomBar}>
         <div className={styles.counter}>

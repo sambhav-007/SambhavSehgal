@@ -1,0 +1,722 @@
+/* ── Overlay ─────────────────────────────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* ── Modal shell ─────────────────────────────────────────────────────────── */
+.modal {
+  position: relative;
+  width: min(1120px, 100%);
+  max-height: 92vh;
+  background: #07071a;
+  border: 1px solid rgba(124, 58, 237, 0.28);
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 0 0 1px rgba(124, 58, 237, 0.08),
+    0 0 80px rgba(124, 58, 237, 0.15),
+    0 50px 100px rgba(0, 0, 0, 0.75);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #64748b;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.closeBtn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+/* ── Banner ──────────────────────────────────────────────────────────────── */
+.topBanner {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 16px 26px 13px;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+  background: linear-gradient(to right, rgba(124, 58, 237, 0.08), transparent);
+  flex-shrink: 0;
+}
+.bannerTitle {
+  font-size: 1.15rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a855f7, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.01em;
+}
+.bannerSub {
+  font-size: 0.78rem;
+  color: #475569;
+}
+
+/* ── Two-column layout ───────────────────────────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 390px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Machine scene (left column) ─────────────────────────────────────────── */
+.machineScene {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 28px;
+  background:
+    radial-gradient(ellipse 70% 80% at 40% 55%, rgba(124, 58, 237, 0.07), transparent),
+    radial-gradient(ellipse 50% 50% at 70% 30%, rgba(6, 182, 212, 0.04), transparent);
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   3-D VENDING MACHINE
+   Perspective tilt on wrapper → side-depth illusion via ::after pseudo
+   ══════════════════════════════════════════════════════════════════════════ */
+.machine {
+  position: relative;
+  width: 420px;
+  border-radius: 18px 18px 10px 10px;
+  /* Slight 3-D tilt */
+  transform: perspective(900px) rotateY(-11deg) rotateX(2deg);
+  filter:
+    drop-shadow(-28px 28px 48px rgba(0, 0, 0, 0.75))
+    drop-shadow(0 0 50px rgba(124, 58, 237, 0.14));
+}
+
+/* Right-side depth panel */
+.machine::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: -60px;
+  width: 64px;
+  bottom: 12px;
+  background: linear-gradient(to right, #130835, #08051a);
+  border-radius: 0 6px 6px 0;
+  transform: rotateY(76deg);
+  transform-origin: left center;
+  box-shadow: inset -6px 0 16px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* ── Machine Header ─────────────────────────────────────────────────── */
+.machineHeader {
+  background: linear-gradient(135deg, #1c0b46, #0d0822);
+  border-radius: 16px 16px 0 0;
+  padding: 12px 16px 10px;
+  border-bottom: 2px solid rgba(168, 85, 247, 0.45);
+  box-shadow:
+    0 0 24px rgba(124, 58, 237, 0.35) inset,
+    0 2px 0 rgba(168, 85, 247, 0.5);
+}
+.machineHeaderText {
+  font-size: 1rem;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.22em;
+  color: #f1f5f9;
+  text-shadow: 0 0 16px rgba(168, 85, 247, 0.85);
+}
+.machineHeaderText span {
+  color: #22d3ee;
+  text-shadow: 0 0 14px rgba(34, 211, 238, 0.85);
+}
+.headerLights {
+  display: flex;
+  gap: 7px;
+  margin-top: 8px;
+}
+.headerLight {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #a855f7;
+  box-shadow: 0 0 7px #a855f7, 0 0 14px rgba(168, 85, 247, 0.5);
+  animation: lightPulse 1.5s ease-in-out infinite;
+}
+.headerLight:nth-child(even) {
+  background: #22d3ee;
+  box-shadow: 0 0 7px #22d3ee, 0 0 14px rgba(34, 211, 238, 0.4);
+}
+@keyframes lightPulse {
+  0%, 100% { opacity: 1;    transform: scale(1);   }
+  50%       { opacity: 0.3; transform: scale(0.78); }
+}
+
+/* ── Glass Panel ────────────────────────────────────────────────────── */
+.glassPanel {
+  position: relative;
+  background: linear-gradient(165deg, rgba(14, 7, 42, 0.98), rgba(9, 4, 28, 0.98));
+  border-left:  3px solid rgba(168, 85, 247, 0.18);
+  border-right: 3px solid rgba(6, 182, 212, 0.1);
+  overflow: hidden;
+  min-height: 260px;
+}
+/* Glass glare */
+.glassGlare {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    138deg,
+    rgba(255, 255, 255, 0.045) 0%,
+    rgba(255, 255, 255, 0.012) 38%,
+    transparent 58%
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+/* Subtle reflection strip */
+.glassReflection {
+  position: absolute;
+  top: 0;
+  left: 12%;
+  width: 18%;
+  bottom: 0;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.025),
+    transparent
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── Snack Grid ─────────────────────────────────────────────────────── */
+.snackGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  padding: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Empty slot */
+.snackSlotEmpty {
+  position: relative;
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.018);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  overflow: hidden;
+}
+.slotGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.07), transparent 70%);
+}
+.slotCode {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: rgba(124, 58, 237, 0.4);
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+/* Filled slot */
+.snackSlot {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-radius: 7px;
+  padding: 6px 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.snackSlot:hover {
+  border-color: rgba(168, 85, 247, 0.55);
+  background: rgba(124, 58, 237, 0.1);
+  box-shadow: 0 0 14px rgba(124, 58, 237, 0.22) inset;
+}
+.snackSlot.dispensing {
+  animation: dispenseFlash 0.75s ease forwards;
+}
+@keyframes dispenseFlash {
+  0%   { background: rgba(34, 211, 238, 0.3); border-color: #22d3ee; box-shadow: 0 0 20px rgba(34,211,238,0.4) inset; }
+  100% { background: rgba(255, 255, 255, 0.025); border-color: rgba(168, 85, 247, 0.15); box-shadow: none; }
+}
+.slotCodeSmall {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.48rem;
+  color: rgba(124, 58, 237, 0.4);
+  font-weight: 700;
+  align-self: flex-end;
+  margin-right: 2px;
+}
+.snackEmoji { font-size: 1.55rem; line-height: 1; }
+.snackName  { font-size: 0.58rem; color: #94a3b8; text-align: center; font-weight: 500; line-height: 1.2; }
+.snackPrice {
+  font-size: 0.64rem;
+  color: #22d3ee;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Control Panel ──────────────────────────────────────────────────── */
+.controlPanel {
+  background: linear-gradient(to bottom, #0f0630, #07051a);
+  border-top: 2px solid rgba(124, 58, 237, 0.22);
+  padding: 10px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.displayScreen {
+  flex: 1;
+  background: #000;
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: #22d3ee;
+  text-shadow: 0 0 8px rgba(34, 211, 238, 0.7);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.15) inset;
+  letter-spacing: 0.03em;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.displayCursor {
+  display: inline-block;
+  width: 5px;
+  height: 12px;
+  background: #22d3ee;
+  border-radius: 1px;
+  opacity: 0.7;
+  animation: blink 1.1s step-end infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 0;   }
+}
+.ctrlRight {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+.coinSlot { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.coinLabel {
+  font-size: 0.45rem;
+  color: #334155;
+  letter-spacing: 0.12em;
+  font-family: 'JetBrains Mono', monospace;
+}
+.coinSlit {
+  width: 28px;
+  height: 4px;
+  background: #000;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 3px;
+  box-shadow: 0 0 6px rgba(168, 85, 247, 0.25) inset;
+}
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+.key {
+  width: 16px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  font-size: 0.44rem;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Dispense Tray ──────────────────────────────────────────────────── */
+.dispenseTray {
+  background: #04020f;
+  border-top: 2px solid rgba(255, 255, 255, 0.04);
+  border-radius: 0 0 12px 12px;
+  padding: 8px 16px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.trayOpening {
+  width: 76%;
+  height: 22px;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.9) inset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.trayItem {
+  font-size: 1.3rem;
+  position: absolute;
+}
+
+/* ── Cart panel (right column) ───────────────────────────────────────────── */
+.cartPanel {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(124, 58, 237, 0.15);
+  background: #060618;
+  overflow: hidden;
+}
+.cartHeader {
+  padding: 16px 18px 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #f1f5f9;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  background: rgba(124, 58, 237, 0.05);
+}
+.cartBadge {
+  background: #7c3aed;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+}
+.cartBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.3) transparent;
+  min-height: 0;
+}
+.emptyCart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 190px;
+  text-align: center;
+  gap: 6px;
+  color: #1e293b;
+}
+.emptyIcon   { font-size: 2.4rem; }
+.emptyCart p { font-size: 0.8rem; color: #334155; }
+.emptyHint   { font-size: 0.72rem !important; color: #1e293b !important; }
+
+.cartItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(124, 58, 237, 0.06);
+  border: 1px solid rgba(124, 58, 237, 0.12);
+  border-radius: 10px;
+  padding: 10px 10px;
+  margin-bottom: 7px;
+}
+.cartEmoji   { font-size: 1.35rem; flex-shrink: 0; }
+.cartInfo    { flex: 1; min-width: 0; }
+.cartName    { font-size: 0.78rem; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cartMeta    { font-size: 0.68rem; color: #475569; margin-top: 2px; }
+.cartRight   { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.cartSubtotal {
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: #22d3ee;
+}
+.qtyControls { display: flex; align-items: center; gap: 6px; }
+.qtyBtn {
+  background: rgba(124, 58, 237, 0.14);
+  border: 1px solid rgba(124, 58, 237, 0.24);
+  color: #e2e8f0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.qtyBtn:hover {
+  background: rgba(124, 58, 237, 0.28);
+  border-color: rgba(168, 85, 247, 0.45);
+}
+.qtyValue {
+  min-width: 14px;
+  text-align: center;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Cart footer ─────────────────────────────────────────────────────── */
+.cartFooter {
+  padding: 14px 16px 18px;
+  border-top: 1px solid rgba(124, 58, 237, 0.12);
+  flex-shrink: 0;
+}
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #94a3b8;
+}
+.totalAmt {
+  font-size: 1.18rem;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  background: linear-gradient(135deg, #a855f7, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.payBtn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.35);
+  transition: opacity 0.2s;
+}
+.payBtn:disabled { opacity: 0.28; cursor: not-allowed; }
+.poweredBy { text-align: center; font-size: 0.68rem; color: #1e293b; }
+
+/* ── Checkout overlay ────────────────────────────────────────────────────── */
+.checkoutOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100001;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.checkoutBox {
+  background: #0d0d26;
+  border: 1px solid rgba(124, 58, 237, 0.32);
+  border-radius: 20px;
+  padding: 28px 30px;
+  width: min(420px, 100%);
+  box-shadow: 0 0 70px rgba(124, 58, 237, 0.2);
+}
+.checkoutTitle {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #f1f5f9;
+  margin-bottom: 18px;
+}
+.orderList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.orderRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.83rem;
+  color: #94a3b8;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.orderTotalRow {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #f1f5f9;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+  margin-bottom: 18px;
+}
+.orderTotalAmt {
+  font-family: 'JetBrains Mono', monospace;
+  background: linear-gradient(135deg, #a855f7, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.paymentNote {
+  background: rgba(124, 58, 237, 0.08);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  margin-bottom: 18px;
+}
+.paymentNote p:first-child { font-size: 0.84rem; color: #94a3b8; font-weight: 600; }
+.paymentNote p:last-child  { font-size: 0.73rem; color: #475569; margin-top: 4px; }
+
+.qrSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.qrFrame {
+  margin: 0 auto;
+  width: 210px;
+  padding: 12px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid rgba(124, 58, 237, 0.24);
+  box-shadow: 0 0 32px rgba(124, 58, 237, 0.18);
+}
+.qrImage {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #fff;
+}
+.paymentMeta {
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  border-radius: 12px;
+  background: rgba(124, 58, 237, 0.05);
+  overflow: hidden;
+}
+.paymentMetaRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+.paymentMetaRow + .paymentMetaRow {
+  border-top: 1px solid rgba(124, 58, 237, 0.12);
+}
+.qrHint {
+  font-size: 0.72rem;
+  color: #64748b;
+  line-height: 1.55;
+}
+.qrHint code {
+  font-family: 'JetBrains Mono', monospace;
+  color: #cbd5e1;
+}
+
+.checkoutActions { display: flex; gap: 10px; }
+.cancelBtn {
+  flex: 1;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 0.84rem;
+  cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif;
+  transition: background 0.2s;
+}
+.cancelBtn:hover { background: rgba(255,255,255,0.08); }
+.confirmBtn {
+  flex: 2;
+  padding: 10px;
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+  width: 100%;
+}
+
+/* Success */
+.successIcon { font-size: 3.4rem; text-align: center; margin-bottom: 12px; }
+.successMsg  {
+  text-align: center;
+  font-size: 0.88rem;
+  color: #94a3b8;
+  line-height: 1.72;
+  margin-bottom: 20px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .layout {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+  .machine {
+    transform: perspective(900px) rotateY(-6deg) rotateX(1deg) scale(0.9);
+  }
+  .cartPanel {
+    border-left: none;
+    border-top: 1px solid rgba(124, 58, 237, 0.15);
+  }
+  .cartBody { min-height: 160px; }
+}

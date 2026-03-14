@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="28" fill="#ffffff"/>
+  <rect x="36" y="36" width="440" height="440" rx="20" fill="#f8fafc" stroke="#cbd5e1" stroke-width="8"/>
+
+  <g fill="#0f172a">
+    <rect x="74" y="74" width="102" height="102" rx="10"/>
+    <rect x="336" y="74" width="102" height="102" rx="10"/>
+    <rect x="74" y="336" width="102" height="102" rx="10"/>
+    <rect x="98" y="98" width="54" height="54" rx="6" fill="#f8fafc"/>
+    <rect x="360" y="98" width="54" height="54" rx="6" fill="#f8fafc"/>
+    <rect x="98" y="360" width="54" height="54" rx="6" fill="#f8fafc"/>
+
+    <rect x="216" y="86" width="24" height="24" rx="4"/>
+    <rect x="252" y="86" width="24" height="24" rx="4"/>
+    <rect x="216" y="122" width="60" height="24" rx="4"/>
+    <rect x="204" y="204" width="24" height="24" rx="4"/>
+    <rect x="240" y="204" width="24" height="24" rx="4"/>
+    <rect x="276" y="204" width="24" height="24" rx="4"/>
+    <rect x="312" y="204" width="24" height="24" rx="4"/>
+    <rect x="216" y="240" width="24" height="60" rx="4"/>
+    <rect x="252" y="240" width="24" height="24" rx="4"/>
+    <rect x="288" y="240" width="60" height="24" rx="4"/>
+    <rect x="216" y="312" width="24" height="24" rx="4"/>
+    <rect x="252" y="312" width="24" height="60" rx="4"/>
+    <rect x="288" y="312" width="24" height="24" rx="4"/>
+    <rect x="324" y="312" width="24" height="24" rx="4"/>
+    <rect x="360" y="240" width="24" height="24" rx="4"/>
+    <rect x="360" y="276" width="24" height="60" rx="4"/>
+    <rect x="396" y="240" width="24" height="24" rx="4"/>
+    <rect x="396" y="312" width="24" height="24" rx="4"/>
+  </g>
+
+  <text x="256" y="470" text-anchor="middle" fill="#475569" font-family="Arial, sans-serif" font-size="20" font-weight="700">Replace with your real UPI QR</text>
+</svg>
