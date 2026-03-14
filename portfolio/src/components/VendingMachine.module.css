@@ -706,17 +706,117 @@
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 980px) {
+  .layout {
+    grid-template-columns: 1fr 340px;
+  }
+  .machine {
+    width: 360px;
+  }
+  .machine::after {
+    right: -50px;
+    width: 54px;
+  }
+}
+
 @media (max-width: 700px) {
+  .overlay {
+    align-items: stretch;
+    padding: 8px;
+  }
+  .modal {
+    width: 100%;
+    max-height: 96vh;
+    border-radius: 18px;
+  }
+  .topBanner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 14px 44px 12px 14px;
+  }
+  .bannerTitle {
+    font-size: 1.02rem;
+  }
+  .bannerSub {
+    font-size: 0.74rem;
+  }
   .layout {
     grid-template-columns: 1fr;
     overflow-y: auto;
   }
+  .machineScene {
+    padding: 16px 8px 10px;
+  }
   .machine {
-    transform: perspective(900px) rotateY(-6deg) rotateX(1deg) scale(0.9);
+    width: min(92vw, 360px);
+    transform: perspective(900px) rotateY(-5deg) rotateX(1deg);
+  }
+  .machine::after {
+    top: 8px;
+    right: -40px;
+    width: 42px;
+    bottom: 8px;
+  }
+  .glassPanel {
+    min-height: 0;
   }
   .cartPanel {
     border-left: none;
     border-top: 1px solid rgba(124, 58, 237, 0.15);
   }
-  .cartBody { min-height: 160px; }
+  .cartHeader {
+    padding: 12px 14px 10px;
+  }
+  .cartBody {
+    min-height: 180px;
+    max-height: 36vh;
+  }
+  .cartFooter {
+    padding: 12px 14px 14px;
+  }
+
+  .checkoutOverlay {
+    align-items: flex-end;
+    padding: 10px;
+  }
+  .checkoutBox {
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 18px 14px;
+    border-radius: 16px;
+  }
+  .checkoutTitle {
+    font-size: 1rem;
+    margin-bottom: 14px;
+  }
+  .qrFrame {
+    width: min(74vw, 220px);
+    padding: 10px;
+  }
+  .checkoutActions {
+    flex-direction: column;
+  }
+  .cancelBtn,
+  .confirmBtn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 420px) {
+  .machine {
+    width: min(94vw, 320px);
+    transform: perspective(900px) rotateY(-4deg) rotateX(1deg);
+  }
+  .machine::after {
+    right: -34px;
+    width: 34px;
+  }
+  .snackName {
+    font-size: 0.54rem;
+  }
+  .snackPrice {
+    font-size: 0.6rem;
+  }
 }
