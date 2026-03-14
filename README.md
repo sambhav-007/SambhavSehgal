@@ -39,7 +39,7 @@ The site is designed for smooth transitions, strong visual identity, and recruit
 ## Visual Preview
 
 <p align="center">
-  <img src="portfolio/public/og-image.svg" alt="Portfolio Preview" width="900" />
+  <img src="portfolio/public/image.png" alt="Portfolio Preview" width="900" />
 </p>
 
 ---
