@@ -29,7 +29,7 @@ export default function VendingMachine({ onClose }) {
 
   const addToCart = (snack) => {
     setDispensing(snack.id)
-    setTimeout(() => setDispensing(null), 750)
+    setTimeout(() => setDispensing(null), 900)
     setCart(prev => {
       const ex = prev.find(i => i.id === snack.id)
       return ex
@@ -81,12 +81,20 @@ export default function VendingMachine({ onClose }) {
 
           {/* ── 3D VENDING MACHINE ── */}
           <div className={styles.machineScene}>
-            <div className={styles.machine}>
+            <div className={`${styles.machine} ${dispensing ? styles.machineActive : ''}`}>
+              <div className={styles.machineAura} />
+              <div className={styles.powerRail}>
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+              </div>
 
               {/* Illuminated header strip */}
               <div className={styles.machineHeader}>
                 <div className={styles.machineHeaderText}>
-                  SNACK<span>STATION</span>
+                  CYBER<span>VENDOR</span>
                 </div>
                 <div className={styles.headerLights}>
                   {[...Array(8)].map((_, i) => (
@@ -101,6 +109,7 @@ export default function VendingMachine({ onClose }) {
 
               {/* Glass panel with snack grid */}
               <div className={styles.glassPanel}>
+                <div className={styles.scanline} />
                 <div className={styles.glassGlare} />
                 <div className={styles.glassReflection} />
                 <div className={styles.snackGrid}>
@@ -133,6 +142,7 @@ export default function VendingMachine({ onClose }) {
                       : '▸   SELECT AN ITEM'}
                 </div>
                 <div className={styles.ctrlRight}>
+                  <div className={styles.systemTag}>SYS ONLINE</div>
                   <div className={styles.coinSlot}>
                     <span className={styles.coinLabel}>INSERT</span>
                     <div className={styles.coinSlit} />
@@ -147,15 +157,24 @@ export default function VendingMachine({ onClose }) {
 
               {/* Dispense tray */}
               <div className={styles.dispenseTray}>
-                <div className={styles.trayOpening}>
+                <div className={`${styles.trayOpening} ${dispensing ? styles.trayOpeningActive : ''}`}>
                   <AnimatePresence>
                     {dispensing && (
                       <motion.span
-                        className={styles.trayItem}
-                        initial={{ y: -18, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
+                        className={styles.traySpark}
+                        initial={{ scale: 0.6, opacity: 0 }}
+                        animate={{ scale: 1.2, opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ type: 'spring', stiffness: 300 }}
+                        transition={{ duration: 0.28 }}
+                      />
+                    )}
+                    {dispensing && (
+                      <motion.span
+                        className={styles.trayItem}
+                        initial={{ y: -28, opacity: 0, scale: 0.82 }}
+                        animate={{ y: 0, opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ type: 'spring', stiffness: 360, damping: 14 }}
                       >
                         {SNACKS.find(s => s.id === dispensing)?.emoji ?? '🍬'}
                       </motion.span>
