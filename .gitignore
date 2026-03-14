@@ -1,1 +1,17 @@
 /SAMBHAV SEHGAL RESUME.pdf
+
+# Dependencies
+node_modules/
+portfolio/node_modules/
+
+# Build output
+portfolio/dist/
+
+# Vite/env
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db

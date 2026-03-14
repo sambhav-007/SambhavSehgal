@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://sambhavsehgal.vercel.app/sitemap.xml
