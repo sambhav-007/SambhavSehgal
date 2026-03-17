@@ -273,61 +273,9 @@
       "target": 34962
     }
   ],
-  "samplers": [
-    {
-      "wrapS": 10497,
-      "wrapT": 10497
-    }
-  ],
-  "textures": [
-    {
-      "source": 0,
-      "sampler": 0
-    },
-    {
-      "source": 4,
-      "sampler": 0
-    },
-    {
-      "source": 2,
-      "sampler": 0
-    },
-    {
-      "source": 3,
-      "sampler": 0
-    },
-    {
-      "source": 1,
-      "sampler": 0
-    }
-  ],
-  "images": [
-    {
-      "name": "00_BaseColor_Merged.jpg",
-      "mimeType": "image/jpeg",
-      "uri": "images/00_BaseColor_Merged.jpg"
-    },
-    {
-      "name": "00_Roughness_Merged.jpg",
-      "mimeType": "image/jpeg",
-      "uri": "images/00_Roughness_Merged.jpg"
-    },
-    {
-      "name": "00_Normal_Merged.jpg",
-      "mimeType": "image/jpeg",
-      "uri": "images/00_Normal_Merged.jpg"
-    },
-    {
-      "name": "00_Mixed_AO_Merged.jpg",
-      "mimeType": "image/jpeg",
-      "uri": "images/00_Mixed_AO_Merged.jpg"
-    },
-    {
-      "name": "00_Emissive_merged.jpg",
-      "mimeType": "image/jpeg",
-      "uri": "images/00_Emissive_merged.jpg"
-    }
-  ],
+  "samplers": [],
+  "textures": [],
+  "images": [],
   "buffers": [
     {
       "uri": "Milano_GotG.bin",
@@ -338,28 +286,12 @@
     {
       "name": "00_erged",
       "doubleSided": true,
-      "pbrMetallicRoughness": {
-        "baseColorTexture": {
-          "index": 0
-        },
-        "metallicRoughnessTexture": {
-          "index": 4
-        }
-      },
+      "pbrMetallicRoughness": {},
       "emissiveFactor": [
         1,
         1,
         1
-      ],
-      "emissiveTexture": {
-        "index": 1
-      },
-      "normalTexture": {
-        "index": 2
-      },
-      "occlusionTexture": {
-        "index": 3
-      }
+      ]
     }
   ],
   "meshes": [

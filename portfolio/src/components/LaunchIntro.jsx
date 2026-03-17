@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Center, useGLTF, useTexture, useProgress } from '@react-three/drei'
+import { Center, useGLTF, useProgress, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import styles from './LaunchIntro.module.css'
 
@@ -266,51 +266,39 @@ function CameraController({ dragRef, phaseRef, launchStartRef }) {
 function MilanoModel({ dragRef, phaseRef, onReady }) {
   const outerGroup = useRef(null)
   const { scene } = useGLTF('/models/milano/Milano_GotG.gltf')
-  const [baseColor, emissive, normal, ao, roughness] = useTexture([
-    '/models/milano/images/00_BaseColor_Merged.jpg',
-    '/models/milano/images/00_Emissive_merged.jpg',
-    '/models/milano/images/00_Normal_Merged.jpg',
-    '/models/milano/images/00_Mixed_AO_Merged.jpg',
-    '/models/milano/images/00_Roughness_Merged.jpg',
+  const [shipBaseMap, shipEmissiveMap] = useTexture([
+    '/models/milano/images/00_BaseColor_Lite.jpg',
+    '/models/milano/images/00_Emissive_Lite.jpg',
   ])
 
   const { centeredScene, fitScale, framedDistance } = useMemo(() => {
     const cloned = scene.clone(true)
 
-    baseColor.colorSpace = THREE.SRGBColorSpace
-    emissive.colorSpace = THREE.SRGBColorSpace
-    baseColor.flipY = false
-    emissive.flipY = false
-    normal.flipY = false
-    ao.flipY = false
-    roughness.flipY = false
-    baseColor.needsUpdate = true
-    emissive.needsUpdate = true
-    normal.needsUpdate = true
-    ao.needsUpdate = true
-    roughness.needsUpdate = true
+    shipBaseMap.colorSpace = THREE.SRGBColorSpace
+    shipEmissiveMap.colorSpace = THREE.SRGBColorSpace
+    shipBaseMap.flipY = false
+    shipEmissiveMap.flipY = false
+    shipBaseMap.anisotropy = 4
+    shipBaseMap.needsUpdate = true
+    shipEmissiveMap.needsUpdate = true
 
-    // Force all meshes to use the downloaded texture set
+    // Use compressed real textures to preserve authentic Milano paint scheme.
     cloned.traverse((node) => {
       if (!node.isMesh) return
 
-      if (node.geometry?.attributes?.uv && !node.geometry.attributes.uv2) {
-        node.geometry.setAttribute('uv2', node.geometry.attributes.uv)
-      }
-
       const mats = Array.isArray(node.material) ? node.material : [node.material]
       mats.forEach((m) => {
-        m.map = baseColor
-        m.emissiveMap = emissive
-        m.normalMap = normal
-        m.aoMap = ao
-        m.roughnessMap = roughness
-        m.metalnessMap = roughness
-        m.emissive = new THREE.Color(0xffffff)
-        m.emissiveIntensity = 0.8
+        m.map = shipBaseMap
+        m.emissiveMap = shipEmissiveMap
+        m.normalMap = null
+        m.aoMap = null
+        m.roughnessMap = null
+        m.metalnessMap = null
+        m.emissive = new THREE.Color('#ffffff')
+        m.emissiveIntensity = 0.75
         m.metalness = 0.35
-        m.roughness = 0.92
-        m.color = new THREE.Color(0xffffff)
+        m.roughness = 0.82
+        m.color = new THREE.Color('#ffffff')
         m.envMapIntensity = 0
         m.needsUpdate = true
       })
@@ -336,7 +324,7 @@ function MilanoModel({ dragRef, phaseRef, onReady }) {
       fitScale: 10.8 / maxDim,
       framedDistance: cameraDistance,
     }
-  }, [ao, baseColor, emissive, normal, roughness, scene])
+  }, [scene, shipBaseMap, shipEmissiveMap])
 
   useEffect(() => {
     if (dragRef.current.framed) return
@@ -393,16 +381,14 @@ function MilanoModel({ dragRef, phaseRef, onReady }) {
 }
 
 useGLTF.preload('/models/milano/Milano_GotG.gltf')
-useTexture.preload('/models/milano/images/00_BaseColor_Merged.jpg')
-useTexture.preload('/models/milano/images/00_Emissive_merged.jpg')
-useTexture.preload('/models/milano/images/00_Normal_Merged.jpg')
-useTexture.preload('/models/milano/images/00_Mixed_AO_Merged.jpg')
-useTexture.preload('/models/milano/images/00_Roughness_Merged.jpg')
+useTexture.preload('/models/milano/images/00_BaseColor_Lite.jpg')
+useTexture.preload('/models/milano/images/00_Emissive_Lite.jpg')
 
 // ── Main export ────────────────────────────────────────────────────────────────
 export default function LaunchIntro({ onComplete }) {
   const [phase, setPhase] = useState('idle')
   const [modelReady, setModelReady] = useState(false)
+  const [allowSkip, setAllowSkip] = useState(false)
   // phaseRef avoids stale closures inside canvas callbacks
   const phaseRef = useRef('idle')
   const dragRef  = useRef({
@@ -417,7 +403,7 @@ export default function LaunchIntro({ onComplete }) {
   const launchStartRef = useRef(0)
 
   const startLaunch = () => {
-    if (phaseRef.current !== 'idle') return
+    if (phaseRef.current !== 'idle' || (!modelReady && !allowSkip)) return
     dragRef.current.rotX = 0
     launchStartRef.current = performance.now()
     phaseRef.current = 'launching'
@@ -427,6 +413,12 @@ export default function LaunchIntro({ onComplete }) {
   }
 
   useEffect(() => () => clearTimeout(timerRef.current), [])
+
+  useEffect(() => {
+    if (modelReady) return undefined
+    const slowNetworkTimer = setTimeout(() => setAllowSkip(true), 7000)
+    return () => clearTimeout(slowNetworkTimer)
+  }, [modelReady])
 
   return (
     <div className={`${styles.root} ${phase === 'launching' ? styles.launching : ''}`}>
@@ -477,11 +469,15 @@ export default function LaunchIntro({ onComplete }) {
           type="button"
           className={styles.launchBtn}
           onClick={startLaunch}
-          disabled={phase !== 'idle' || !modelReady}
+          disabled={phase !== 'idle' || (!modelReady && !allowSkip)}
         >
-          {phase !== 'idle' ? 'LAUNCHING…' : modelReady ? 'LAUNCH' : 'LOADING…'}
+          {phase !== 'idle' ? 'LAUNCHING…' : modelReady || allowSkip ? 'LAUNCH' : 'LOADING…'}
         </button>
-        <p className={styles.hint}>Drag to rotate · Scroll to zoom</p>
+        <p className={styles.hint}>
+          {allowSkip && !modelReady
+            ? 'Slow network detected · Launch available without full model textures'
+            : 'Drag to rotate · Scroll to zoom'}
+        </p>
       </footer>
 
     </div>
