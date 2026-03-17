@@ -58,13 +58,6 @@ function AppContent() {
     }
   }, [])
 
-  useEffect(() => {
-    if (launched) return undefined
-    // Failsafe: never stay stuck on an intro black screen.
-    const introFailsafe = setTimeout(() => setLaunched(true), 12000)
-    return () => clearTimeout(introFailsafe)
-  }, [launched])
-
   if (runtimeError) {
     return (
       <div className="fatalScreen" role="alert">
