@@ -472,8 +472,9 @@ function PortalEffect({ phaseRef }) {
         lastX = nx; lastY = ny
       }
     }
-    if (geomRef.current) {
-      geomRef.current.attributes.position.needsUpdate = true
+    const posAttr = geomRef.current?.attributes?.position
+    if (posAttr) {
+      posAttr.needsUpdate = true
       geomRef.current.computeBoundingSphere()
     }
   }
@@ -514,27 +515,27 @@ function PortalEffect({ phaseRef }) {
     // ── Ring layer pulses at staggered frequencies ─────────────────────────
     const t = performance.now() / 1000
     // ring1: white-hot thread — rapid micro-flicker
-    if (ring1Ref.current) {
+    if (ring1Ref.current?.material) {
       ring1Ref.current.scale.setScalar(1 + Math.sin(t * 22) * 0.008 * energy)
       ring1Ref.current.material.opacity = 0.85 + Math.sin(t * 18) * 0.15
     }
     // ring2: cyan bloom — medium pulse
-    if (ring2Ref.current) {
+    if (ring2Ref.current?.material) {
       ring2Ref.current.scale.setScalar(1 + Math.sin(t * 9.2) * 0.018 * energy)
       ring2Ref.current.material.opacity = 0.62 + Math.sin(t * 7.1 + 1.0) * 0.18
     }
     // ring3: mid bloom — slow breathe + slow rotation
-    if (ring3Ref.current) {
+    if (ring3Ref.current?.material) {
       ring3Ref.current.scale.setScalar(1 + Math.sin(t * 4.8) * 0.025 * energy)
       ring3Ref.current.material.opacity = 0.38 + Math.sin(t * 3.5 + 2.1) * 0.12
       ring3Ref.current.rotation.z += delta * 0.18
     }
     // ring4: outer diffuse — very slow counter-rotation, soft breathe
-    if (ring4Ref.current) {
+    if (ring4Ref.current?.material) {
       ring4Ref.current.material.opacity = 0.17 + Math.sin(t * 2.2 + 0.5) * 0.07
       ring4Ref.current.rotation.z -= delta * 0.09
     }
-    if (haloRef.current) haloRef.current.material.opacity = 0.48 + Math.sin(t * 5.6) * 0.16
+    if (haloRef.current?.material) haloRef.current.material.opacity = 0.48 + Math.sin(t * 5.6) * 0.16
     if (innerStarsRef.current) innerStarsRef.current.rotation.z -= delta * 0.2
     if (innerStarsMatRef.current) {
       innerStarsMatRef.current.opacity = 0.78 + Math.sin(t * 11.5) * 0.18
