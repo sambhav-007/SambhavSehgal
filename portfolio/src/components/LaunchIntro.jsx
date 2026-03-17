@@ -379,20 +379,30 @@ function MilanoModel({ dragRef, phaseRef, onReady }) {
 
 // ── Portal: circular electric ring with dark core (GotG-like) ─────────────────
 function PortalEffect({ phaseRef }) {
-  const groupRef = useRef(null)
-  const ringRef = useRef(null)
-  const haloRef = useRef(null)
-  const arcGeomRef = useRef(null)
-  const innerStarsRef = useRef(null)
+  const groupRef         = useRef(null)
+  const ring1Ref         = useRef(null)  // white-hot thread
+  const ring2Ref         = useRef(null)  // bright cyan inner bloom
+  const ring3Ref         = useRef(null)  // mid blue-cyan
+  const ring4Ref         = useRef(null)  // wide outer diffuse
+  const haloRef          = useRef(null)
+  const arcGeomRef       = useRef(null)  // cyan arc bolts
+  const arcGeom2Ref      = useRef(null)  // white flash sparks
+  const innerStarsRef    = useRef(null)
   const innerStarsMatRef = useRef(null)
-  const portalStartRef = useRef(0)
-  const launchRef = useRef(0)
-  const arcTickRef = useRef(0)
+  const portalStartRef   = useRef(0)
+  const launchRef        = useRef(0)
+  const arcTickRef       = useRef(0)
+  const arcTick2Ref      = useRef(0)
 
-  const arcMeta = useMemo(() => ({ bolts: 18, segsPerBolt: 7 }), [])
+  const arcMeta  = useMemo(() => ({ bolts: 26, segsPerBolt: 9 }), [])
+  const arcMeta2 = useMemo(() => ({ bolts: 10, segsPerBolt: 6 }), [])
   const arcPositions = useMemo(
     () => new Float32Array(arcMeta.bolts * arcMeta.segsPerBolt * 2 * 3),
     [arcMeta],
+  )
+  const arcPositions2 = useMemo(
+    () => new Float32Array(arcMeta2.bolts * arcMeta2.segsPerBolt * 2 * 3),
+    [arcMeta2],
   )
   const innerStarPositions = useMemo(() => {
     const starCount = 460
@@ -442,38 +452,35 @@ function PortalEffect({ phaseRef }) {
     return new THREE.CanvasTexture(cv)
   }, [])
 
-  const rebuildArcs = (energy = 1) => {
-    const arr = arcPositions
+  const rebuildArcs = (arr, meta, geomRef, energy = 1, rMin = 0.96, rMax = 1.26) => {
     let p = 0
-    for (let b = 0; b < arcMeta.bolts; b++) {
+    for (let b = 0; b < meta.bolts; b++) {
       const baseA = Math.random() * Math.PI * 2
-      const span = THREE.MathUtils.lerp(0.18, 0.42, Math.random())
-      const r0 = THREE.MathUtils.lerp(0.98, 1.05, Math.random())
-      const r1 = THREE.MathUtils.lerp(1.09, 1.22, Math.random()) + energy * 0.08
-
-      let lastX = Math.cos(baseA) * r0
-      let lastY = Math.sin(baseA) * r0
-      for (let s = 1; s <= arcMeta.segsPerBolt; s++) {
-        const t = s / arcMeta.segsPerBolt
-        const a = baseA + span * (t - 0.5)
-        const r = THREE.MathUtils.lerp(r0, r1, t) + (Math.random() - 0.5) * 0.06 * energy
+      const span  = THREE.MathUtils.lerp(0.12, 0.6, Math.random())
+      const r0    = THREE.MathUtils.lerp(rMin, 1.04, Math.random())
+      const r1    = THREE.MathUtils.lerp(1.08, rMax, Math.random()) + energy * 0.1
+      let lastX   = Math.cos(baseA) * r0
+      let lastY   = Math.sin(baseA) * r0
+      for (let s = 1; s <= meta.segsPerBolt; s++) {
+        const frac = s / meta.segsPerBolt
+        const a  = baseA + span * (frac - 0.5)
+        const r  = THREE.MathUtils.lerp(r0, r1, frac) + (Math.random() - 0.5) * 0.09 * energy
         const nx = Math.cos(a) * r
         const ny = Math.sin(a) * r
-
-        arr[p++] = lastX; arr[p++] = lastY; arr[p++] = (Math.random() - 0.5) * 0.02
-        arr[p++] = nx;    arr[p++] = ny;    arr[p++] = (Math.random() - 0.5) * 0.02
-        lastX = nx
-        lastY = ny
+        arr[p++] = lastX; arr[p++] = lastY; arr[p++] = (Math.random() - 0.5) * 0.04
+        arr[p++] = nx;    arr[p++] = ny;    arr[p++] = (Math.random() - 0.5) * 0.04
+        lastX = nx; lastY = ny
       }
     }
-    if (arcGeomRef.current) {
-      arcGeomRef.current.attributes.position.needsUpdate = true
-      arcGeomRef.current.computeBoundingSphere()
+    if (geomRef.current) {
+      geomRef.current.attributes.position.needsUpdate = true
+      geomRef.current.computeBoundingSphere()
     }
   }
 
   useEffect(() => {
-    rebuildArcs(1)
+    rebuildArcs(arcPositions,  arcMeta,  arcGeomRef,  1)
+    rebuildArcs(arcPositions2, arcMeta2, arcGeom2Ref, 1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -504,20 +511,46 @@ function PortalEffect({ phaseRef }) {
       energy = 1.8 + elapsed * 0.8
     }
 
-    // Gentle pulse on ring and halo for electric look.
+    // ── Ring layer pulses at staggered frequencies ─────────────────────────
     const t = performance.now() / 1000
-    if (ringRef.current) ringRef.current.scale.setScalar(1 + Math.sin(t * 7.5) * 0.015 * energy)
-    if (haloRef.current) haloRef.current.material.opacity = 0.44 + Math.sin(t * 5.6) * 0.12
+    // ring1: white-hot thread — rapid micro-flicker
+    if (ring1Ref.current) {
+      ring1Ref.current.scale.setScalar(1 + Math.sin(t * 22) * 0.008 * energy)
+      ring1Ref.current.material.opacity = 0.85 + Math.sin(t * 18) * 0.15
+    }
+    // ring2: cyan bloom — medium pulse
+    if (ring2Ref.current) {
+      ring2Ref.current.scale.setScalar(1 + Math.sin(t * 9.2) * 0.018 * energy)
+      ring2Ref.current.material.opacity = 0.62 + Math.sin(t * 7.1 + 1.0) * 0.18
+    }
+    // ring3: mid bloom — slow breathe + slow rotation
+    if (ring3Ref.current) {
+      ring3Ref.current.scale.setScalar(1 + Math.sin(t * 4.8) * 0.025 * energy)
+      ring3Ref.current.material.opacity = 0.38 + Math.sin(t * 3.5 + 2.1) * 0.12
+      ring3Ref.current.rotation.z += delta * 0.18
+    }
+    // ring4: outer diffuse — very slow counter-rotation, soft breathe
+    if (ring4Ref.current) {
+      ring4Ref.current.material.opacity = 0.17 + Math.sin(t * 2.2 + 0.5) * 0.07
+      ring4Ref.current.rotation.z -= delta * 0.09
+    }
+    if (haloRef.current) haloRef.current.material.opacity = 0.48 + Math.sin(t * 5.6) * 0.16
     if (innerStarsRef.current) innerStarsRef.current.rotation.z -= delta * 0.2
     if (innerStarsMatRef.current) {
       innerStarsMatRef.current.opacity = 0.78 + Math.sin(t * 11.5) * 0.18
-      innerStarsMatRef.current.size = 0.02 + Math.sin(t * 8.2) * 0.003
+      innerStarsMatRef.current.size    = 0.02  + Math.sin(t * 8.2)  * 0.003
     }
-
+    // cyan arc bolts — rebuild every 40ms
     arcTickRef.current += delta
-    if (arcTickRef.current > 0.06) {
+    if (arcTickRef.current > 0.04) {
       arcTickRef.current = 0
-      rebuildArcs(energy)
+      rebuildArcs(arcPositions, arcMeta, arcGeomRef, energy)
+    }
+    // white spark bolts — rebuild every 25ms for faster crackle
+    arcTick2Ref.current += delta
+    if (arcTick2Ref.current > 0.025) {
+      arcTick2Ref.current = 0
+      rebuildArcs(arcPositions2, arcMeta2, arcGeom2Ref, energy, 1.0, 1.32)
     }
   })
 
@@ -547,49 +580,109 @@ function PortalEffect({ phaseRef }) {
           transparent
           opacity={0.82}
           blending={THREE.AdditiveBlending}
-          depthTest={false}
+          depthTest={true}
           depthWrite={false}
           sizeAttenuation
           toneMapped={false}
         />
       </points>
 
-      {/* Electric cyan ring */}
-      <mesh ref={ringRef}>
-        <torusGeometry args={[1.06, 0.088, 20, 180]} />
-        <meshStandardMaterial emissive="#73f6ff" emissiveIntensity={11} color="#031523" toneMapped={false} />
-      </mesh>
-
-      {/* Outer atmospheric glow */}
-      <mesh ref={haloRef}>
-        <circleGeometry args={[1.52, 96]} />
+      {/* ── 4-layer additive ring bloom stack ─────────────────────────── */}
+      {/* Layer 1: ultra-thin white-hot core thread */}
+      <mesh ref={ring1Ref}>
+        <torusGeometry args={[1.06, 0.005, 16, 200]} />
         <meshBasicMaterial
-          map={haloTexture}
-          transparent
-          opacity={0.5}
-          blending={THREE.AdditiveBlending}
-          side={THREE.DoubleSide}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* Electric arc sparks around ring */}
-      <lineSegments>
-        <bufferGeometry ref={arcGeomRef}>
-          <bufferAttribute attach="attributes-position" args={[arcPositions, 3]} />
-        </bufferGeometry>
-        <lineBasicMaterial
-          color="#bbf7ff"
+          color="#ffffff"
           transparent
           opacity={0.9}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           toneMapped={false}
         />
+      </mesh>
+      {/* Layer 2: bright cyan inner glow */}
+      <mesh ref={ring2Ref}>
+        <torusGeometry args={[1.06, 0.028, 16, 200]} />
+        <meshBasicMaterial
+          color="#80eeff"
+          transparent
+          opacity={0.7}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </mesh>
+      {/* Layer 3: mid blue-cyan bloom */}
+      <mesh ref={ring3Ref}>
+        <torusGeometry args={[1.06, 0.09, 14, 180]} />
+        <meshBasicMaterial
+          color="#1a6ccc"
+          transparent
+          opacity={0.42}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </mesh>
+      {/* Layer 4: wide outer diffuse corona */}
+      <mesh ref={ring4Ref}>
+        <torusGeometry args={[1.06, 0.24, 12, 160]} />
+        <meshBasicMaterial
+          color="#073060"
+          transparent
+          opacity={0.18}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </mesh>
+
+      {/* Outer atmospheric halo disc */}
+      <mesh ref={haloRef}>
+        <circleGeometry args={[1.68, 96]} />
+        <meshBasicMaterial
+          map={haloTexture}
+          transparent
+          opacity={0.52}
+          blending={THREE.AdditiveBlending}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Cyan discharge arc bolts */}
+      <lineSegments>
+        <bufferGeometry ref={arcGeomRef}>
+          <bufferAttribute attach="attributes-position" args={[arcPositions, 3]} />
+        </bufferGeometry>
+        <lineBasicMaterial
+          color="#9ae8ff"
+          transparent
+          opacity={0.82}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
       </lineSegments>
 
-      <pointLight color="#58d7ff" intensity={14} distance={30} decay={2} />
-      <pointLight color="#9ac2ff" intensity={8} distance={18} decay={2} />
+      {/* White flash sparks (faster crackle layer) */}
+      <lineSegments>
+        <bufferGeometry ref={arcGeom2Ref}>
+          <bufferAttribute attach="attributes-position" args={[arcPositions2, 3]} />
+        </bufferGeometry>
+        <lineBasicMaterial
+          color="#dfffff"
+          transparent
+          opacity={0.48}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </lineSegments>
+
+      <pointLight color="#40c8ff" intensity={18} distance={32} decay={2} />
+      <pointLight color="#7ab8ff" intensity={9}  distance={20} decay={2} />
+      <pointLight color="#ffffff" intensity={4}  distance={10} decay={3} />
     </group>
   )
 }
