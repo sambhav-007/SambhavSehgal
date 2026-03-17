@@ -74,13 +74,15 @@ function LoadingOverlay({ modelReady }) {
   const shownProgress = modelReady ? 100 : Math.max(8, Math.round(progress))
   const hidden = modelReady && !active
   const logs = [
-    { at: 10, text: '[BOOT] Initiating Milano flight terminal...' },
-    { at: 24, text: '[SYS ] Verifying hull integrity matrix...' },
-    { at: 42, text: '[NAV ] Compiling stellar route maps...' },
-    { at: 58, text: '[ENG ] Priming thruster control lanes...' },
-    { at: 73, text: '[IO  ] Syncing cockpit telemetry feed...' },
-    { at: 88, text: '[AI  ] Locking launch stabilization...' },
-    { at: 100, text: '[DONE] Launch systems online.' },
+    { at:  8, text: '[BOOT] Milano-class M-ship powering on...' },
+    { at: 20, text: '[ENG ] Quarnyx engines warming up... 34% thrust' },
+    { at: 33, text: '[SYS ] Hull pressure check — nominal across all decks' },
+    { at: 46, text: '[NAV ] Plotting hyperspace jump coordinates...' },
+    { at: 58, text: '[ENG ] Thrust at full capacity — engines green' },
+    { at: 69, text: '[PWR ] Plex charger cycling to jump-ready state' },
+    { at: 80, text: '[NAV ] Jump vector locked — Xandar sector, sector 7-G' },
+    { at: 91, text: '[SHLD] Particle shields armed and holding' },
+    { at: 100, text: '[DONE] All systems nominal. Ready for space jump.' },
   ]
   const visibleLogs = logs.filter((entry) => shownProgress >= entry.at)
 
@@ -104,11 +106,11 @@ function LoadingOverlay({ modelReady }) {
           ))}
 
           {visibleLogs.length === 0 && (
-            <p className={`${styles.logLine} ${styles.logPending}`}>[BOOT] Waiting for asset stream...</p>
+            <p className={`${styles.logLine} ${styles.logPending}`}>[BOOT] Milano systems coming online...</p>
           )}
 
           <p className={`${styles.logLine} ${styles.logOn}`}>
-            {'>'} {shownProgress < 100 ? 'Awaiting final subsystem response' : 'Press LAUNCH to engage'}
+            {'>'} {shownProgress < 100 ? 'Hold tight — jump drive spooling up...' : 'All systems go. Initiate space jump.'}
             <span className={styles.loaderCursor}>_</span>
           </p>
         </div>
@@ -118,8 +120,8 @@ function LoadingOverlay({ modelReady }) {
         </div>
 
         <div className={styles.loaderMeta}>
-          <p className={styles.loaderState}>{shownProgress < 100 ? 'ENGINES PRIMING' : 'READY FOR LAUNCH'}</p>
-          <p className={styles.loaderSub}>Synchronizing cockpit systems</p>
+          <p className={styles.loaderState}>{shownProgress < 100 ? 'JUMP DRIVE SPOOLING' : 'JUMP DRIVE READY'}</p>
+          <p className={styles.loaderSub}>{shownProgress < 100 ? 'Warming quarnyx engines' : 'Locked on jump vector — awaiting launch'}</p>
         </div>
       </div>
     </div>
@@ -317,7 +319,8 @@ function MilanoModel({ dragRef, phaseRef, onReady }) {
     const fov = THREE.MathUtils.degToRad(42)
     const fitHeightDistance = scaledRadius / Math.tan(fov / 2)
     const fitWidthDistance = fitHeightDistance / 0.75
-    const cameraDistance = Math.max(fitHeightDistance, fitWidthDistance) * 1.15
+    // Slightly tighter framing so the ship reads larger on first load.
+    const cameraDistance = Math.max(fitHeightDistance, fitWidthDistance) * 0.92
 
     return {
       centeredScene: cloned,
@@ -341,17 +344,26 @@ function MilanoModel({ dragRef, phaseRef, onReady }) {
   useFrame((_, delta) => {
     if (!outerGroup.current) return
     const ph = phaseRef.current
+    const t = performance.now() / 1000
 
     if (ph === 'idle') {
+      // faster frequency (1.6 → ~0.25 Hz), larger bob, multi-layer for smoothness
+      const floatY = Math.sin(t * 1.6) * 0.22 + Math.sin(t * 0.55) * 0.06
+      const floatRoll = Math.sin(t * 1.1) * 0.032 + Math.sin(t * 0.4) * 0.01
+      const floatPitch = Math.sin(t * 0.8) * 0.018
+
       // Follow drag target smoothly
       outerGroup.current.rotation.y = THREE.MathUtils.damp(
-        outerGroup.current.rotation.y, dragRef.current.rotY, 8, delta,
+        outerGroup.current.rotation.y, dragRef.current.rotY, 10, delta,
       )
       outerGroup.current.rotation.x = THREE.MathUtils.damp(
-        outerGroup.current.rotation.x, dragRef.current.rotX, 8, delta,
+        outerGroup.current.rotation.x, dragRef.current.rotX + floatPitch, 12, delta,
+      )
+      outerGroup.current.rotation.z = THREE.MathUtils.damp(
+        outerGroup.current.rotation.z, floatRoll, 10, delta,
       )
       outerGroup.current.position.y = THREE.MathUtils.damp(
-        outerGroup.current.position.y, 0, 8, delta,
+        outerGroup.current.position.y, floatY, 10, delta,
       )
     } else {
       // Turn rear toward camera, keep ship dead straight during punch-in.
