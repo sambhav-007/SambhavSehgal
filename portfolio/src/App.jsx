@@ -39,6 +39,13 @@ class RootErrorBoundary extends Component {
 function AppContent() {
   const [launched, setLaunched] = useState(false)
   const [runtimeError, setRuntimeError] = useState(null)
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('portfolio-theme') || 'dark'
+    } catch {
+      return 'dark'
+    }
+  })
 
   useEffect(() => {
     const onError = (event) => {
@@ -58,6 +65,20 @@ function AppContent() {
     }
   }, [])
 
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme)
+    try {
+      localStorage.setItem('portfolio-theme', theme)
+    } catch {
+      // ignore storage errors in restricted environments
+    }
+  }, [theme])
+
+  const selectTheme = (nextTheme) => {
+    if (nextTheme !== 'light' && nextTheme !== 'dark') return
+    setTheme(nextTheme)
+  }
+
   if (runtimeError) {
     return (
       <div className="fatalScreen" role="alert">
@@ -76,8 +97,8 @@ function AppContent() {
       {!launched && <LaunchIntro onComplete={() => setLaunched(true)} />}
       {launched && (
         <>
-          <ParticleBackground />
-          <TunnelExperience />
+          <ParticleBackground theme={theme} />
+          <TunnelExperience theme={theme} onSelectTheme={selectTheme} />
         </>
       )}
     </div>

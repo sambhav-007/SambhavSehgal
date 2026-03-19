@@ -146,7 +146,7 @@ export default function HeroSlide() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.58 }}
       >
-        <span style={{ color: '#94a3b8' }}>I'm a </span>
+        <span className={s.rolePrefix}>I'm a </span>
         <span className={s.roleText}>{text}</span>
         <span className={s.cursor}>|</span>
       </motion.div>

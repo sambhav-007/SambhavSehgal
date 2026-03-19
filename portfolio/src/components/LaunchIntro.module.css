@@ -363,6 +363,42 @@
     0 0 18px rgba(112, 205, 255, 0.45);
 }
 
+:global(body[data-theme='light']) .loaderTag,
+:global(body[data-theme='light']) .loaderPct,
+:global(body[data-theme='light']) .logOn,
+:global(body[data-theme='light']) .logPending,
+:global(body[data-theme='light']) .loaderState,
+:global(body[data-theme='light']) .loaderSub,
+:global(body[data-theme='light']) .skipWebsiteBtn,
+:global(body[data-theme='light']) .kicker,
+:global(body[data-theme='light']) .title,
+:global(body[data-theme='light']) .sub,
+:global(body[data-theme='light']) .hint {
+  color: #111827;
+  text-shadow: none;
+}
+
+:global(body[data-theme='light']) .loaderTrack {
+  background: rgba(17, 24, 39, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(17, 24, 39, 0.3), 0 0 0 1px rgba(17, 24, 39, 0.1);
+}
+
+:global(body[data-theme='light']) .loaderTrack span {
+  background: linear-gradient(90deg, #111827 0%, #374151 100%);
+  box-shadow: 0 0 14px rgba(17, 24, 39, 0.18);
+}
+
+:global(body[data-theme='light']) .skipWebsiteBtn {
+  border-color: rgba(17, 24, 39, 0.42);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(247, 243, 232, 0.95)) padding-box,
+    linear-gradient(135deg, rgba(17, 24, 39, 0.65), rgba(55, 65, 81, 0.65)) border-box;
+  box-shadow:
+    0 0 0 1px rgba(17, 24, 39, 0.12),
+    0 7px 18px rgba(17, 24, 39, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
 /* ── Launching phase ───────────────────────────────────────────────────────── */
 .launching .header,
 .launching .footer {

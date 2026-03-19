@@ -29,6 +29,19 @@ const SLIDES = [
 
 const THRESHOLD = 300
 
+const THEME_OPTIONS = [
+  {
+    id: 'light',
+    name: 'Cookies n Creme',
+    desc: 'Cream background with black particles',
+  },
+  {
+    id: 'dark',
+    name: 'Space',
+    desc: 'Default deep-space dark theme',
+  },
+]
+
 function applyProgress(curEl, nxtEl, p, dir) {
   if (curEl) {
     if (dir > 0) {
@@ -54,7 +67,7 @@ function applyProgress(curEl, nxtEl, p, dir) {
 const hideSlot = (el) => { if (el) { el.style.opacity = '0'; el.style.pointerEvents = 'none' } }
 const showSlot = (el) => { if (el) { el.style.opacity = '';  el.style.pointerEvents = '' } }
 
-export default function TunnelExperience() {
+export default function TunnelExperience({ theme = 'dark', onSelectTheme }) {
   /**
    * Dual-slot architecture:
    *   slots[0/1]  — slideIdx rendered in each persistent div (null = empty)
@@ -66,6 +79,7 @@ export default function TunnelExperience() {
   const [slots, setSlots]           = useState([0, null])
   const [activeSlot, setActiveSlot] = useState(0)
   const [showVending, setShowVending] = useState(false)
+  const [showThemes, setShowThemes] = useState(false)
 
   const ref0 = useRef(null)
   const ref1 = useRef(null)
@@ -84,6 +98,15 @@ export default function TunnelExperience() {
 
   // Init: hide the empty second slot
   useEffect(() => { hideSlot(ref1.current) }, [])
+
+  useEffect(() => {
+    if (!showThemes) return undefined
+    const onKey = (e) => {
+      if (e.key === 'Escape') setShowThemes(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [showThemes])
 
   // After React commits new pending-slot content, apply its initial 3-D position
   useEffect(() => {
@@ -307,7 +330,18 @@ export default function TunnelExperience() {
         >
           {SLIDES[currentIdx].label}
         </motion.div>
-        <button className={styles.hireBtn} onClick={() => setShowVending(true)}>🍫 Buy Me a Snack</button>
+        <div className={styles.headerActions}>
+          <button
+            className={styles.themeToggle}
+            type="button"
+            onClick={() => setShowThemes(true)}
+            aria-label="Themes"
+            title={theme === 'light' ? 'Themes (Current: Cookies n Creme)' : 'Themes (Current: Space)'}
+          >
+            <span>Themes</span>
+          </button>
+          <button className={styles.hireBtn} onClick={() => setShowVending(true)}>🍫 Buy Me a Snack</button>
+        </div>
       </header>
 
       <div className={styles.viewport}>
@@ -322,9 +356,57 @@ export default function TunnelExperience() {
       </div>
 
       <ScrollProgress current={currentIdx} total={SLIDES.length} />
-      <NavDots slides={SLIDES} current={currentIdx} goTo={goTo} />
+      <NavDots slides={SLIDES} current={currentIdx} goTo={goTo} theme={theme} />
 
       <AnimatePresence>
+        {showThemes && (
+          <motion.div
+            className={styles.themeOverlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowThemes(false)}
+          >
+            <motion.div
+              className={styles.themePanel}
+              initial={{ opacity: 0, y: 18, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.98 }}
+              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className={styles.themeTitle}>Choose Theme</h3>
+              <p className={styles.themeSub}>Pick your preferred visual mode</p>
+
+              <div className={styles.themeList}>
+                {THEME_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    className={`${styles.themeOption} ${theme === opt.id ? styles.themeOptionActive : ''}`}
+                    onClick={() => {
+                      onSelectTheme?.(opt.id)
+                      setShowThemes(false)
+                    }}
+                  >
+                    <span className={styles.themeOptionHead}>
+                      <span
+                        className={`${styles.themeOptionSwatch} ${opt.id === 'light' ? styles.themeOptionSwatchLight : styles.themeOptionSwatchDark}`}
+                        aria-hidden="true"
+                      />
+                      <span className={styles.themeOptionName}>{opt.name}</span>
+                      <span
+                        className={`${styles.themeOptionPattern} ${opt.id === 'light' ? styles.patternLight : styles.patternDark}`}
+                        aria-hidden="true"
+                      />
+                    </span>
+                    <span className={styles.themeOptionDesc}>{opt.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
         {showVending && <VendingMachine onClose={() => setShowVending(false)} />}
       </AnimatePresence>
 

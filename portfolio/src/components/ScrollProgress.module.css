@@ -19,3 +19,12 @@
   transform-origin: top;
   box-shadow: 0 0 10px rgba(124, 58, 237, 0.6), 0 0 20px rgba(6, 182, 212, 0.3);
 }
+
+:global(body[data-theme='light']) .track {
+  background: rgba(17, 24, 39, 0.12);
+}
+
+:global(body[data-theme='light']) .bar {
+  background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
+  box-shadow: 0 0 10px rgba(17, 24, 39, 0.2), 0 0 18px rgba(17, 24, 39, 0.12);
+}

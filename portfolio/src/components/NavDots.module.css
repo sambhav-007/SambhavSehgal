@@ -57,6 +57,11 @@
   transform: translateY(-50%) translateX(0);
 }
 
+:global(body[data-theme='light']) .label {
+  color: #111827;
+  text-shadow: none;
+}
+
 @media (max-width: 900px) {
   .nav {
     right: 10px;

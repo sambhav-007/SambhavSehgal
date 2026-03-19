@@ -36,6 +36,18 @@
   margin-top: 6px;
 }
 
+:global(body[data-theme='light']) .title {
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: #0f172a;
+  background-clip: initial;
+  color: #0f172a;
+}
+
+:global(body[data-theme='light']) .subtitle {
+  color: #1f2937;
+}
+
 .panels {
   display: grid;
   grid-template-columns: 1fr 1fr;

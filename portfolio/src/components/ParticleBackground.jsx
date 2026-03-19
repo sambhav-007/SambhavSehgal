@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import styles from './ParticleBackground.module.css'
 
-export default function ParticleBackground() {
+export default function ParticleBackground({ theme = 'dark' }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -38,6 +38,10 @@ export default function ParticleBackground() {
     const Z_NEAR   = 1     // recycle threshold (nearly at viewer)
     const BASE_DZ  = 2.0   // default z-decrease per frame (slower)
 
+    const isLight = theme === 'light'
+    const starRgb = isLight ? '22,22,22' : '255,255,255'
+    const fadeFill = isLight ? 'rgba(247,243,232,0.22)' : 'rgba(0,0,0,0.14)'
+
     class Star {
       constructor(randomZ) { this.reset(randomZ) }
       reset(randomZ) {
@@ -48,7 +52,7 @@ export default function ParticleBackground() {
           ? Math.random() * Z_FAR                        // initial: spread everywhere
           : Z_FAR * (0.5 + Math.random() * 0.5)         // recycle: random in far half [450-900]
 
-        this.size    = Math.random() * 1.6 + 0.6
+        this.size    = Math.random() * 2.1 + 0.9
         this.opacity = Math.random() * 0.3 + 0.7   // high base brightness
         this.prevSx  = null
         this.prevSy  = null
@@ -77,8 +81,8 @@ export default function ParticleBackground() {
         // Trail from previous position to current
         if (this.prevSx !== null && (Math.abs(sx - this.prevSx) + Math.abs(sy - this.prevSy)) > 0.5) {
           const grad = ctx.createLinearGradient(this.prevSx, this.prevSy, sx, sy)
-          grad.addColorStop(0, `rgba(255,255,255,0)`)
-          grad.addColorStop(1, `rgba(255,255,255,${Math.min(alpha * 1.2, 1)})`)
+          grad.addColorStop(0, `rgba(${starRgb},0)`)
+          grad.addColorStop(1, `rgba(${starRgb},${Math.min(alpha * 1.2, 1)})`)
           ctx.beginPath()
           ctx.moveTo(this.prevSx, this.prevSy)
           ctx.lineTo(sx, sy)
@@ -90,8 +94,8 @@ export default function ParticleBackground() {
 
         // Star dot
         ctx.beginPath()
-        ctx.arc(sx, sy, Math.max(radius, 0.4), 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255,255,255,${alpha})`
+        ctx.arc(sx, sy, Math.max(radius, 0.6), 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(${starRgb},${alpha})`
         ctx.fill()
       }
     }
@@ -99,7 +103,7 @@ export default function ParticleBackground() {
     for (let i = 0; i < 160; i++) particles.push(new Star(true))
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(0,0,0,0.14)'
+      ctx.fillStyle = fadeFill
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       // Lerp vanishing point opposite to cursor — far stars barely shift, near stars shift fully
@@ -138,7 +142,7 @@ export default function ParticleBackground() {
       window.removeEventListener('mousemove', onMouseMove)
       cancelAnimationFrame(animationId)
     }
-  }, [])
+  }, [theme])
 
   return <canvas ref={canvasRef} className={styles.canvas} />
 }

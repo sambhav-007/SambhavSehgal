@@ -29,6 +29,19 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
+body[data-theme='light'] {
+  --bg-primary: #f7f3e8;
+  --bg-secondary: #efe8d8;
+  --bg-card: rgba(255, 255, 255, 0.8);
+  --bg-card-hover: rgba(255, 255, 255, 0.95);
+  --text-primary: #111111;
+  --text-secondary: #111111;
+  --text-muted: #111111;
+  --border: rgba(51, 65, 85, 0.16);
+  --border-hover: rgba(51, 65, 85, 0.32);
+  --gradient-card: linear-gradient(135deg, rgba(148,163,184,0.14), rgba(71,85,105,0.08));
+}
+
 html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
@@ -41,11 +54,15 @@ html::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
 
 body {
   font-family: var(--font-main);
-  background-color: #000000;
+  background-color: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
   overflow: hidden;
   cursor: none;
+}
+
+body[data-theme='light'] {
+  background-color: #f7f3e8;
 }
 
 a, button, [role="button"], input, label, select, textarea {
@@ -144,6 +161,30 @@ img { max-width: 100%; }
   background: rgba(124,58,237,0.1);
   border-color: var(--purple-light);
   transform: translateY(-2px);
+}
+
+body[data-theme='light'] .tag {
+  background: rgba(79, 70, 229, 0.08);
+  border-color: rgba(79, 70, 229, 0.25);
+}
+
+body[data-theme='light'] .btn-outline {
+  color: #0f172a;
+  border-color: rgba(51, 65, 85, 0.32);
+  background: rgba(255, 255, 255, 0.56);
+}
+
+body[data-theme='light'] .btn-outline:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(67, 56, 202, 0.5);
+}
+
+body[data-theme='light'] .section-title {
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: #111827;
+  background-clip: initial;
+  color: #111827;
 }
 
 @keyframes float {

@@ -102,6 +102,10 @@
   min-height: 2.2rem;
 }
 
+.rolePrefix {
+  color: #94a3b8;
+}
+
 .roleText {
   background: linear-gradient(135deg, #a855f7, #06b6d4);
   -webkit-background-clip: text;
@@ -544,6 +548,41 @@
     font-size: 1.4rem;
   }
 }
+
+/* Keep these at the end so they win over base dark rules above. */
+:global(body[data-theme='light']) .infoItem,
+:global(body[data-theme='light']) .traitCard,
+:global(body[data-theme='light']) .card,
+:global(body[data-theme='light']) .stat,
+:global(body[data-theme='light']) .expCard,
+:global(body[data-theme='light']) .projCard,
+:global(body[data-theme='light']) .achCard,
+:global(body[data-theme='light']) .contactItem,
+:global(body[data-theme='light']) .skillGroup {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+:global(body[data-theme='light']) .infoLbl,
+:global(body[data-theme='light']) .infoVal,
+:global(body[data-theme='light']) .traitTitle,
+:global(body[data-theme='light']) .traitDesc {
+  color: #111827;
+}
+
+:global(body[data-theme='light']) .formSubmit {
+  background: #111827;
+  color: #ffffff;
+  border: 1px solid #111827;
+  box-shadow: 0 8px 22px rgba(17, 24, 39, 0.28);
+}
+
+:global(body[data-theme='light']) .formSubmit:hover {
+  background: #0b1220;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.34);
+  transform: translateY(-1px);
+}
+
 .formInput:focus, .formTextarea:focus {
   border-color: #7c3aed;
   box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
@@ -591,6 +630,29 @@
 
 .infoLbl { font-size: 0.65rem; font-weight: 700; color: #7c3aed; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'JetBrains Mono', monospace; }
 .infoVal { font-size: 0.8rem; color: #cbd5e1; font-weight: 500; }
+
+:global(body[data-theme='light']) .heroName,
+:global(body[data-theme='light']) .roleText,
+:global(body[data-theme='light']) .statVal,
+:global(body[data-theme='light']) .hl {
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: #111827;
+  background-clip: initial;
+  color: #111827;
+}
+
+:global(body[data-theme='light']) .heroName {
+  animation: none;
+}
+
+:global(body[data-theme='light']) .cursor,
+:global(body[data-theme='light']) .barPct,
+:global(body[data-theme='light']) .infoLbl,
+:global(body[data-theme='light']) .contactIcon,
+:global(body[data-theme='light']) .projType {
+  color: #111827;
+}
 
 .traitCard {
   padding: 16px;
@@ -674,3 +736,163 @@
 }
 
 .softChip:hover { background: rgba(124,58,237,0.2); border-color: rgba(124,58,237,0.45); color: #e2e8f0; }
+
+/* ── Light theme contrast overrides ───────────────────────────────────────── */
+:global(body[data-theme='light']) .heroTitle,
+:global(body[data-theme='light']) .projTitle,
+:global(body[data-theme='light']) .expRole,
+:global(body[data-theme='light']) .achTitle,
+:global(body[data-theme='light']) .traitTitle,
+:global(body[data-theme='light']) .sgTitle,
+:global(body[data-theme='light']) .contactValue,
+:global(body[data-theme='light']) .formInput,
+:global(body[data-theme='light']) .formTextarea,
+:global(body[data-theme='light']) .infoVal {
+  color: #0f172a;
+}
+
+:global(body[data-theme='light']) .rolePrefix,
+:global(body[data-theme='light']) .tagline,
+:global(body[data-theme='light']) .statLbl,
+:global(body[data-theme='light']) .expMeta,
+:global(body[data-theme='light']) .expPoints li,
+:global(body[data-theme='light']) .projSub,
+:global(body[data-theme='light']) .projDesc,
+:global(body[data-theme='light']) .projPoints li,
+:global(body[data-theme='light']) .stackTag,
+:global(body[data-theme='light']) .achDesc,
+:global(body[data-theme='light']) .contactLabel,
+:global(body[data-theme='light']) .formLabel,
+:global(body[data-theme='light']) .bio,
+:global(body[data-theme='light']) .traitDesc,
+:global(body[data-theme='light']) .barName,
+:global(body[data-theme='light']) .sgTag,
+:global(body[data-theme='light']) .cSep,
+:global(body[data-theme='light']) .cTotal {
+  color: #1f2937;
+}
+
+:global(body[data-theme='light']) .card,
+:global(body[data-theme='light']) .stat,
+:global(body[data-theme='light']) .expCard,
+:global(body[data-theme='light']) .projCard,
+:global(body[data-theme='light']) .achCard,
+:global(body[data-theme='light']) .contactItem,
+:global(body[data-theme='light']) .infoItem,
+:global(body[data-theme='light']) .skillGroup {
+  background: rgba(255, 255, 255, 0.86);
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+:global(body[data-theme='light']) .formInput,
+:global(body[data-theme='light']) .formTextarea {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.22);
+}
+
+:global(body[data-theme='light']) .formInput::placeholder,
+:global(body[data-theme='light']) .formTextarea::placeholder {
+  color: rgba(15, 23, 42, 0.46);
+}
+
+:global(body[data-theme='light']) .barBg {
+  background: rgba(15, 23, 42, 0.12);
+}
+
+:global(body[data-theme='light']) .sgTag {
+  background: rgba(15, 23, 42, 0.06);
+}
+
+:global(body[data-theme='light']) .softChip {
+  color: #111827;
+  background: rgba(79, 70, 229, 0.1);
+  border-color: rgba(79, 70, 229, 0.24);
+}
+
+:global(body[data-theme='light']) .softChip:hover {
+  color: #0f172a;
+  background: rgba(79, 70, 229, 0.16);
+  border-color: rgba(79, 70, 229, 0.38);
+}
+
+/* ── Final light-theme neutralization (must stay last) ───────────────────── */
+:global(body[data-theme='light']) .traitCard,
+:global(body[data-theme='light']) .card,
+:global(body[data-theme='light']) .stat,
+:global(body[data-theme='light']) .expCard,
+:global(body[data-theme='light']) .projCard,
+:global(body[data-theme='light']) .achCard,
+:global(body[data-theme='light']) .contactItem,
+:global(body[data-theme='light']) .infoItem,
+:global(body[data-theme='light']) .skillGroup,
+:global(body[data-theme='light']) .formInput,
+:global(body[data-theme='light']) .formTextarea {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+:global(body[data-theme='light']) .traitIcon,
+:global(body[data-theme='light']) .contactIcon {
+  background: rgba(15, 23, 42, 0.08);
+  color: #111827;
+}
+
+:global(body[data-theme='light']) .inlineTag,
+:global(body[data-theme='light']) .softChip,
+:global(body[data-theme='light']) .sgTag {
+  background: rgba(15, 23, 42, 0.06);
+  border-color: rgba(15, 23, 42, 0.16);
+  color: #111827;
+}
+
+:global(body[data-theme='light']) .softChip:hover,
+:global(body[data-theme='light']) .contactItem:hover,
+:global(body[data-theme='light']) .traitCard:hover,
+:global(body[data-theme='light']) .expCard:hover,
+:global(body[data-theme='light']) .projCard:hover,
+:global(body[data-theme='light']) .achCard:hover,
+:global(body[data-theme='light']) .skillGroup:hover {
+  border-color: rgba(15, 23, 42, 0.26);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+:global(body[data-theme='light']) .projCard::before {
+  background: linear-gradient(90deg, #111827, #374151);
+}
+
+:global(body[data-theme='light']) .formSubmit {
+  background: #111827;
+  color: #ffffff;
+  border: 1px solid #111827;
+  box-shadow: 0 8px 22px rgba(17, 24, 39, 0.28);
+}
+
+:global(body[data-theme='light']) .formSubmit:hover {
+  background: #0b1220;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.34);
+}
+
+/* Skills slide strict black palette (override inline colors) */
+:global(body[data-theme='light']) .barName,
+:global(body[data-theme='light']) .barPct,
+:global(body[data-theme='light']) .sgTitle,
+:global(body[data-theme='light']) .sgTag {
+  color: #111827 !important;
+}
+
+:global(body[data-theme='light']) .barBg {
+  background: rgba(17, 24, 39, 0.14) !important;
+}
+
+:global(body[data-theme='light']) .barFill {
+  background: linear-gradient(90deg, #111827, #374151) !important;
+}
+
+:global(body[data-theme='light']) .sgDot {
+  background: #111827 !important;
+}
+
+:global(body[data-theme='light']) .sgTag {
+  border-color: rgba(17, 24, 39, 0.3) !important;
+  background: rgba(17, 24, 39, 0.06) !important;
+}
