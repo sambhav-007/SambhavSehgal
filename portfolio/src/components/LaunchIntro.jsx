@@ -69,7 +69,7 @@ function Stars({ phaseRef, launchStartRef }) {
   )
 }
 
-function LoadingOverlay({ modelReady }) {
+function LoadingOverlay({ modelReady, onSkip }) {
   const { progress, active } = useProgress()
   const shownProgress = modelReady ? 100 : Math.max(8, Math.round(progress))
   const hidden = modelReady && !active
@@ -122,6 +122,16 @@ function LoadingOverlay({ modelReady }) {
         <div className={styles.loaderMeta}>
           <p className={styles.loaderState}>{shownProgress < 100 ? 'JUMP DRIVE SPOOLING' : 'JUMP DRIVE READY'}</p>
           <p className={styles.loaderSub}>{shownProgress < 100 ? 'Warming quarnyx engines' : 'Locked on jump vector — awaiting launch'}</p>
+        </div>
+
+        <div className={styles.loaderActions}>
+          <button
+            type="button"
+            className={styles.skipWebsiteBtn}
+            onClick={onSkip}
+          >
+            Skip to Website
+          </button>
         </div>
       </div>
     </div>
@@ -709,6 +719,11 @@ export default function LaunchIntro({ onComplete }) {
   const timerRef = useRef(null)
   const launchStartRef = useRef(0)
 
+  const handleSkipToWebsite = () => {
+    clearTimeout(timerRef.current)
+    onComplete?.()
+  }
+
   const startLaunch = () => {
     if (phaseRef.current !== 'idle' || (!modelReady && !allowSkip)) return
     dragRef.current.rotX = 0
@@ -770,7 +785,7 @@ export default function LaunchIntro({ onComplete }) {
 
       <div className={styles.bloomPulse} aria-hidden="true" />
 
-      <LoadingOverlay modelReady={modelReady} />
+      <LoadingOverlay modelReady={modelReady} onSkip={handleSkipToWebsite} />
 
       <footer className={styles.footer}>
         <button
