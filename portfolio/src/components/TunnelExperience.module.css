@@ -295,6 +295,11 @@
   border-color: rgba(17, 24, 39, 0.4);
 }
 
+.themeOptionSwatchBlood {
+  background: linear-gradient(135deg, #2a0006, #b91c1c);
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
 .themeOptionDesc {
   color: #94a3b8;
   font-size: 0.75rem;
@@ -317,6 +322,85 @@
 .patternLight {
   background: linear-gradient(135deg, #ffffff 50%, #111827 50%);
   border-color: rgba(17, 24, 39, 0.2);
+}
+
+.patternBlood {
+  background: linear-gradient(135deg, #7f1d1d 50%, #000000 50%);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+:global(body[data-theme='blood']) .header {
+  background: linear-gradient(to bottom, rgba(42,0,6,0.92) 0%, rgba(42,0,6,0.2) 72%, transparent 100%);
+}
+
+:global(body[data-theme='blood']) .themeToggle,
+:global(body[data-theme='blood']) .hireBtn {
+  color: #f5f5f5;
+  background:
+    linear-gradient(rgba(11, 11, 13, 0.86), rgba(11, 11, 13, 0.86)) padding-box,
+    linear-gradient(135deg, rgba(185, 28, 28, 0.95), rgba(127, 29, 29, 0.95)) border-box;
+  box-shadow:
+    0 10px 28px rgba(127, 29, 29, 0.3),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+
+:global(body[data-theme='blood']) .themeOverlay {
+  background: rgba(0, 0, 0, 0.52);
+}
+
+:global(body[data-theme='blood']) .themePanel {
+  border-color: rgba(127, 29, 29, 0.48);
+  background:
+    linear-gradient(rgba(10, 10, 12, 0.96), rgba(10, 10, 12, 0.96)) padding-box,
+    linear-gradient(140deg, rgba(185,28,28,0.55), rgba(127,29,29,0.42)) border-box;
+  box-shadow:
+    0 28px 58px rgba(0, 0, 0, 0.46),
+    0 0 24px rgba(127, 29, 29, 0.2);
+}
+
+:global(body[data-theme='blood']) .themeOption {
+  background: rgba(8, 8, 10, 0.9);
+  border-color: rgba(127, 29, 29, 0.38);
+}
+
+:global(body[data-theme='blood']) .themeTitle,
+:global(body[data-theme='blood']) .themeOptionName,
+:global(body[data-theme='blood']) .logo,
+:global(body[data-theme='blood']) .dot,
+:global(body[data-theme='blood']) .sectionLabel {
+  color: #fecaca;
+  -webkit-text-fill-color: #fecaca;
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+}
+
+:global(body[data-theme='blood']) .themeSub,
+:global(body[data-theme='blood']) .themeOptionDesc,
+:global(body[data-theme='blood']) .scrollHint {
+  color: #d4d4d8;
+}
+
+:global(body[data-theme='blood']) .scrollHint:hover {
+  color: #ffe4e6;
+}
+
+:global(body[data-theme='blood']) .cSep,
+:global(body[data-theme='blood']) .cTotal {
+  color: #a1a1aa;
+}
+
+:global(body[data-theme='blood']) .cCurrent {
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: #fecaca;
+  background-clip: initial;
+  color: #fecaca;
+}
+
+:global(body[data-theme='blood']) .themeOptionActive {
+  border-color: rgba(239, 68, 68, 0.65);
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.28), inset 0 0 18px rgba(127, 29, 29, 0.28);
 }
 
 :global(body[data-theme='light']) .header {

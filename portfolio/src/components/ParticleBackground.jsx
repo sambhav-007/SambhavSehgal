@@ -39,8 +39,13 @@ export default function ParticleBackground({ theme = 'dark' }) {
     const BASE_DZ  = 2.0   // default z-decrease per frame (slower)
 
     const isLight = theme === 'light'
-    const starRgb = isLight ? '22,22,22' : '255,255,255'
-    const fadeFill = isLight ? 'rgba(247,243,232,0.22)' : 'rgba(0,0,0,0.14)'
+    const isBlood = theme === 'blood'
+    const starRgb = isBlood ? '0,0,0' : isLight ? '22,22,22' : '255,255,255'
+    const fadeFill = isBlood
+      ? 'rgba(74,0,12,0.24)'
+      : isLight
+        ? 'rgba(247,243,232,0.22)'
+        : 'rgba(0,0,0,0.14)'
 
     class Star {
       constructor(randomZ) { this.reset(randomZ) }

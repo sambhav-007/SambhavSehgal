@@ -40,6 +40,11 @@ const THEME_OPTIONS = [
     name: 'Space',
     desc: 'Default deep-space dark theme',
   },
+  {
+    id: 'blood',
+    name: 'Dark Blood',
+    desc: 'Blood-red backdrop with black particles',
+  },
 ]
 
 function applyProgress(curEl, nxtEl, p, dir) {
@@ -336,7 +341,13 @@ export default function TunnelExperience({ theme = 'dark', onSelectTheme }) {
             type="button"
             onClick={() => setShowThemes(true)}
             aria-label="Themes"
-            title={theme === 'light' ? 'Themes (Current: Cookies n Creme)' : 'Themes (Current: Space)'}
+            title={
+              theme === 'light'
+                ? 'Themes (Current: Cookies n Creme)'
+                : theme === 'blood'
+                  ? 'Themes (Current: Dark Blood)'
+                  : 'Themes (Current: Space)'
+            }
           >
             <span>Themes</span>
           </button>
@@ -391,12 +402,24 @@ export default function TunnelExperience({ theme = 'dark', onSelectTheme }) {
                   >
                     <span className={styles.themeOptionHead}>
                       <span
-                        className={`${styles.themeOptionSwatch} ${opt.id === 'light' ? styles.themeOptionSwatchLight : styles.themeOptionSwatchDark}`}
+                        className={`${styles.themeOptionSwatch} ${
+                          opt.id === 'light'
+                            ? styles.themeOptionSwatchLight
+                            : opt.id === 'blood'
+                              ? styles.themeOptionSwatchBlood
+                              : styles.themeOptionSwatchDark
+                        }`}
                         aria-hidden="true"
                       />
                       <span className={styles.themeOptionName}>{opt.name}</span>
                       <span
-                        className={`${styles.themeOptionPattern} ${opt.id === 'light' ? styles.patternLight : styles.patternDark}`}
+                        className={`${styles.themeOptionPattern} ${
+                          opt.id === 'light'
+                            ? styles.patternLight
+                            : opt.id === 'blood'
+                              ? styles.patternBlood
+                              : styles.patternDark
+                        }`}
                         aria-hidden="true"
                       />
                     </span>

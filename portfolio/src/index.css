@@ -42,6 +42,27 @@ body[data-theme='light'] {
   --gradient-card: linear-gradient(135deg, rgba(148,163,184,0.14), rgba(71,85,105,0.08));
 }
 
+body[data-theme='blood'] {
+  --bg-primary: #2a0006;
+  --bg-secondary: #4a000c;
+  --bg-card: rgba(11, 11, 13, 0.9);
+  --bg-card-hover: rgba(16, 16, 20, 0.95);
+  --purple: #b91c1c;
+  --purple-light: #ef4444;
+  --cyan: #7f1d1d;
+  --cyan-light: #dc2626;
+  --text-primary: #f5f5f5;
+  --text-secondary: #d4d4d8;
+  --text-muted: #a1a1aa;
+  --text-accent: #fecaca;
+  --text-interactive: #ffe4e6;
+  --text-warning: #fca5a5;
+  --border: rgba(220, 38, 38, 0.24);
+  --border-hover: rgba(220, 38, 38, 0.48);
+  --gradient-main: linear-gradient(135deg, #ef4444, #7f1d1d);
+  --gradient-card: linear-gradient(135deg, rgba(220,38,38,0.16), rgba(127,29,29,0.08));
+}
+
 html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
@@ -63,6 +84,34 @@ body {
 
 body[data-theme='light'] {
   background-color: #f7f3e8;
+}
+
+body[data-theme='blood'] {
+  background:
+    radial-gradient(1200px 600px at 20% 15%, rgba(185, 28, 28, 0.2), transparent 62%),
+    linear-gradient(160deg, #2a0006 0%, #4a000c 52%, #1a0005 100%);
+}
+
+body[data-theme='blood'] .section-title {
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: #fecaca;
+  background-clip: initial;
+  color: #fecaca;
+}
+
+body[data-theme='blood'] .section-subtitle {
+  color: #d4d4d8;
+}
+
+body[data-theme='blood'] a {
+  color: #ffe4e6;
+}
+
+body[data-theme='blood'] .tag {
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.28);
+  border-color: rgba(252, 165, 165, 0.36);
 }
 
 a, button, [role="button"], input, label, select, textarea {

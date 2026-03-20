@@ -48,6 +48,17 @@
   color: #1f2937;
 }
 
+:global(body[data-theme='blood']) .title {
+  background: linear-gradient(135deg, #fecaca, #ef4444 58%, #7f1d1d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+:global(body[data-theme='blood']) .subtitle {
+  color: #d4d4d8;
+}
+
 .panels {
   display: grid;
   grid-template-columns: 1fr 1fr;

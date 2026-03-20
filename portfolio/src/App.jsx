@@ -75,7 +75,7 @@ function AppContent() {
   }, [theme])
 
   const selectTheme = (nextTheme) => {
-    if (nextTheme !== 'light' && nextTheme !== 'dark') return
+    if (nextTheme !== 'light' && nextTheme !== 'dark' && nextTheme !== 'blood') return
     setTheme(nextTheme)
   }
 

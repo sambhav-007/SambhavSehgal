@@ -62,6 +62,11 @@
   text-shadow: none;
 }
 
+:global(body[data-theme='blood']) .label {
+  color: #fecaca;
+  text-shadow: 0 0 12px rgba(127, 29, 29, 0.4);
+}
+
 @media (max-width: 900px) {
   .nav {
     right: 10px;

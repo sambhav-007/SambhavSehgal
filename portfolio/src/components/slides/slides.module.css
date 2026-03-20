@@ -896,3 +896,99 @@
   border-color: rgba(17, 24, 39, 0.3) !important;
   background: rgba(17, 24, 39, 0.06) !important;
 }
+
+/* Blood theme black-surface overrides */
+:global(body[data-theme='blood']) .traitCard,
+:global(body[data-theme='blood']) .card,
+:global(body[data-theme='blood']) .stat,
+:global(body[data-theme='blood']) .expCard,
+:global(body[data-theme='blood']) .projCard,
+:global(body[data-theme='blood']) .achCard,
+:global(body[data-theme='blood']) .contactItem,
+:global(body[data-theme='blood']) .infoItem,
+:global(body[data-theme='blood']) .skillGroup,
+:global(body[data-theme='blood']) .formInput,
+:global(body[data-theme='blood']) .formTextarea {
+  background: rgba(10, 10, 12, 0.92);
+  border-color: rgba(127, 29, 29, 0.46);
+}
+
+:global(body[data-theme='blood']) .traitIcon,
+:global(body[data-theme='blood']) .contactIcon {
+  background: rgba(0, 0, 0, 0.55);
+  color: #fecaca;
+}
+
+:global(body[data-theme='blood']) .inlineTag,
+:global(body[data-theme='blood']) .softChip,
+:global(body[data-theme='blood']) .sgTag {
+  background: rgba(0, 0, 0, 0.38);
+  border-color: rgba(127, 29, 29, 0.5);
+  color: #fecaca;
+}
+
+:global(body[data-theme='blood']) .projCard::before {
+  background: linear-gradient(90deg, #111111, #7f1d1d);
+}
+
+:global(body[data-theme='blood']) .barBg {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+:global(body[data-theme='blood']) .barFill {
+  background: linear-gradient(90deg, #111111, #7f1d1d) !important;
+}
+
+:global(body[data-theme='blood']) .heroName {
+  background: linear-gradient(135deg, #fecaca 0%, #ef4444 55%, #7f1d1d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+:global(body[data-theme='blood']) .roleText,
+:global(body[data-theme='blood']) .statVal,
+:global(body[data-theme='blood']) .hl {
+  background: linear-gradient(135deg, #fecaca 0%, #ef4444 55%, #7f1d1d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+:global(body[data-theme='blood']) .cursor,
+:global(body[data-theme='blood']) .barPct,
+:global(body[data-theme='blood']) .infoLbl,
+:global(body[data-theme='blood']) .projType,
+:global(body[data-theme='blood']) .inlineTag,
+:global(body[data-theme='blood']) .contactIcon {
+  color: #fecaca;
+}
+
+:global(body[data-theme='blood']) .inlineTag {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(127, 29, 29, 0.5);
+}
+
+:global(body[data-theme='blood']) .softChip:hover,
+:global(body[data-theme='blood']) .contactItem:hover,
+:global(body[data-theme='blood']) .traitCard:hover,
+:global(body[data-theme='blood']) .expCard:hover,
+:global(body[data-theme='blood']) .projCard:hover,
+:global(body[data-theme='blood']) .achCard:hover,
+:global(body[data-theme='blood']) .skillGroup:hover {
+  border-color: rgba(239, 68, 68, 0.58);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.32);
+}
+
+:global(body[data-theme='blood']) .formSubmit {
+  background: linear-gradient(135deg, #111111, #7f1d1d);
+  color: #ffe4e6;
+  border: 1px solid rgba(127, 29, 29, 0.72);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.34);
+}
+
+:global(body[data-theme='blood']) .formSubmit:hover {
+  background: linear-gradient(135deg, #0a0a0a, #991b1b);
+  box-shadow: 0 10px 24px rgba(127, 29, 29, 0.44);
+  transform: translateY(-1px);
+}
