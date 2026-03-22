@@ -63,6 +63,27 @@ body[data-theme='blood'] {
   --gradient-card: linear-gradient(135deg, rgba(220,38,38,0.16), rgba(127,29,29,0.08));
 }
 
+body[data-theme='cyberpunk'] {
+  --bg-primary: #140a26;
+  --bg-secondary: #2a1450;
+  --bg-card: rgba(15, 10, 28, 0.9);
+  --bg-card-hover: rgba(20, 14, 38, 0.95);
+  --purple: #a855f7;
+  --purple-light: #c084fc;
+  --cyan: #facc15;
+  --cyan-light: #fde047;
+  --text-primary: #fff8dc;
+  --text-secondary: #e7dca8;
+  --text-muted: #c9bb85;
+  --text-accent: #fde047;
+  --text-interactive: #fef08a;
+  --text-warning: #facc15;
+  --border: rgba(168, 85, 247, 0.3);
+  --border-hover: rgba(250, 204, 21, 0.52);
+  --gradient-main: linear-gradient(135deg, #a855f7, #facc15);
+  --gradient-card: linear-gradient(135deg, rgba(168,85,247,0.18), rgba(250,204,21,0.08));
+}
+
 html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
@@ -92,6 +113,12 @@ body[data-theme='blood'] {
     linear-gradient(160deg, #2a0006 0%, #4a000c 52%, #1a0005 100%);
 }
 
+body[data-theme='cyberpunk'] {
+  background:
+    radial-gradient(1200px 600px at 22% 14%, rgba(168, 85, 247, 0.2), transparent 62%),
+    linear-gradient(160deg, #140a26 0%, #2a1450 52%, #0a0617 100%);
+}
+
 body[data-theme='blood'] .section-title {
   background: none;
   -webkit-background-clip: initial;
@@ -112,6 +139,28 @@ body[data-theme='blood'] .tag {
   color: #fecaca;
   background: rgba(127, 29, 29, 0.28);
   border-color: rgba(252, 165, 165, 0.36);
+}
+
+body[data-theme='cyberpunk'] .section-title {
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: #fde047;
+  background-clip: initial;
+  color: #fde047;
+}
+
+body[data-theme='cyberpunk'] .section-subtitle {
+  color: #e7dca8;
+}
+
+body[data-theme='cyberpunk'] a {
+  color: #fef08a;
+}
+
+body[data-theme='cyberpunk'] .tag {
+  color: #fde047;
+  background: rgba(88, 28, 135, 0.28);
+  border-color: rgba(250, 204, 21, 0.44);
 }
 
 a, button, [role="button"], input, label, select, textarea {

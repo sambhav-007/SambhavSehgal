@@ -300,6 +300,11 @@
   border-color: rgba(239, 68, 68, 0.45);
 }
 
+.themeOptionSwatchCyberpunk {
+  background: linear-gradient(135deg, #a855f7, #facc15);
+  border-color: rgba(250, 204, 21, 0.55);
+}
+
 .themeOptionDesc {
   color: #94a3b8;
   font-size: 0.75rem;
@@ -327,6 +332,85 @@
 .patternBlood {
   background: linear-gradient(135deg, #7f1d1d 50%, #000000 50%);
   border-color: rgba(239, 68, 68, 0.3);
+}
+
+.patternCyberpunk {
+  background: linear-gradient(135deg, #a855f7 50%, #facc15 50%);
+  border-color: rgba(250, 204, 21, 0.38);
+}
+
+:global(body[data-theme='cyberpunk']) .header {
+  background: linear-gradient(to bottom, rgba(20,10,38,0.9) 0%, rgba(20,10,38,0.2) 72%, transparent 100%);
+}
+
+:global(body[data-theme='cyberpunk']) .themeToggle,
+:global(body[data-theme='cyberpunk']) .hireBtn {
+  color: #fff8dc;
+  background:
+    linear-gradient(rgba(11, 8, 24, 0.88), rgba(11, 8, 24, 0.88)) padding-box,
+    linear-gradient(135deg, rgba(168,85,247,0.96), rgba(250,204,21,0.96)) border-box;
+  box-shadow:
+    0 10px 30px rgba(109, 40, 217, 0.3),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+
+:global(body[data-theme='cyberpunk']) .themeOverlay {
+  background: rgba(5, 2, 18, 0.56);
+}
+
+:global(body[data-theme='cyberpunk']) .themePanel {
+  border-color: rgba(168, 85, 247, 0.42);
+  background:
+    linear-gradient(rgba(13, 8, 30, 0.96), rgba(13, 8, 30, 0.96)) padding-box,
+    linear-gradient(140deg, rgba(168,85,247,0.5), rgba(250,204,21,0.4)) border-box;
+  box-shadow:
+    0 28px 60px rgba(5, 2, 18, 0.52),
+    0 0 24px rgba(250, 204, 21, 0.18);
+}
+
+:global(body[data-theme='cyberpunk']) .themeOption {
+  background: rgba(9, 7, 20, 0.9);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+:global(body[data-theme='cyberpunk']) .themeTitle,
+:global(body[data-theme='cyberpunk']) .themeOptionName,
+:global(body[data-theme='cyberpunk']) .logo,
+:global(body[data-theme='cyberpunk']) .dot,
+:global(body[data-theme='cyberpunk']) .sectionLabel {
+  color: #fde047;
+  -webkit-text-fill-color: #fde047;
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+}
+
+:global(body[data-theme='cyberpunk']) .themeSub,
+:global(body[data-theme='cyberpunk']) .themeOptionDesc,
+:global(body[data-theme='cyberpunk']) .scrollHint {
+  color: #e7dca8;
+}
+
+:global(body[data-theme='cyberpunk']) .scrollHint:hover {
+  color: #facc15;
+}
+
+:global(body[data-theme='cyberpunk']) .cSep,
+:global(body[data-theme='cyberpunk']) .cTotal {
+  color: #d6c77f;
+}
+
+:global(body[data-theme='cyberpunk']) .cCurrent {
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: #fde047;
+  background-clip: initial;
+  color: #fde047;
+}
+
+:global(body[data-theme='cyberpunk']) .themeOptionActive {
+  border-color: rgba(250, 204, 21, 0.72);
+  box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.3), inset 0 0 18px rgba(168, 85, 247, 0.24);
 }
 
 :global(body[data-theme='blood']) .header {

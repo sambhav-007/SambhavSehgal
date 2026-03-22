@@ -992,3 +992,88 @@
   box-shadow: 0 10px 24px rgba(127, 29, 29, 0.44);
   transform: translateY(-1px);
 }
+
+/* Cyberpunk theme overrides */
+:global(body[data-theme='cyberpunk']) .traitCard,
+:global(body[data-theme='cyberpunk']) .card,
+:global(body[data-theme='cyberpunk']) .stat,
+:global(body[data-theme='cyberpunk']) .expCard,
+:global(body[data-theme='cyberpunk']) .projCard,
+:global(body[data-theme='cyberpunk']) .achCard,
+:global(body[data-theme='cyberpunk']) .contactItem,
+:global(body[data-theme='cyberpunk']) .infoItem,
+:global(body[data-theme='cyberpunk']) .skillGroup,
+:global(body[data-theme='cyberpunk']) .formInput,
+:global(body[data-theme='cyberpunk']) .formTextarea {
+  background: rgba(10, 7, 20, 0.92);
+  border-color: rgba(168, 85, 247, 0.42);
+}
+
+:global(body[data-theme='cyberpunk']) .traitIcon,
+:global(body[data-theme='cyberpunk']) .contactIcon {
+  background: rgba(88, 28, 135, 0.36);
+  color: #fde047;
+}
+
+:global(body[data-theme='cyberpunk']) .inlineTag,
+:global(body[data-theme='cyberpunk']) .softChip,
+:global(body[data-theme='cyberpunk']) .sgTag {
+  background: rgba(88, 28, 135, 0.28);
+  border-color: rgba(250, 204, 21, 0.42);
+  color: #fde047;
+}
+
+:global(body[data-theme='cyberpunk']) .projCard::before {
+  background: linear-gradient(90deg, #a855f7, #facc15);
+}
+
+:global(body[data-theme='cyberpunk']) .barBg {
+  background: rgba(88, 28, 135, 0.34) !important;
+}
+
+:global(body[data-theme='cyberpunk']) .barFill {
+  background: linear-gradient(90deg, #a855f7, #facc15) !important;
+}
+
+:global(body[data-theme='cyberpunk']) .heroName,
+:global(body[data-theme='cyberpunk']) .roleText,
+:global(body[data-theme='cyberpunk']) .statVal,
+:global(body[data-theme='cyberpunk']) .hl {
+  background: linear-gradient(135deg, #a855f7 0%, #facc15 58%, #fde047 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+:global(body[data-theme='cyberpunk']) .cursor,
+:global(body[data-theme='cyberpunk']) .barPct,
+:global(body[data-theme='cyberpunk']) .infoLbl,
+:global(body[data-theme='cyberpunk']) .projType,
+:global(body[data-theme='cyberpunk']) .inlineTag,
+:global(body[data-theme='cyberpunk']) .contactIcon {
+  color: #fde047;
+}
+
+:global(body[data-theme='cyberpunk']) .softChip:hover,
+:global(body[data-theme='cyberpunk']) .contactItem:hover,
+:global(body[data-theme='cyberpunk']) .traitCard:hover,
+:global(body[data-theme='cyberpunk']) .expCard:hover,
+:global(body[data-theme='cyberpunk']) .projCard:hover,
+:global(body[data-theme='cyberpunk']) .achCard:hover,
+:global(body[data-theme='cyberpunk']) .skillGroup:hover {
+  border-color: rgba(250, 204, 21, 0.62);
+  box-shadow: 0 10px 26px rgba(88, 28, 135, 0.34);
+}
+
+:global(body[data-theme='cyberpunk']) .formSubmit {
+  background: linear-gradient(135deg, #3b0764, #facc15);
+  color: #fff8dc;
+  border: 1px solid rgba(250, 204, 21, 0.64);
+  box-shadow: 0 8px 22px rgba(88, 28, 135, 0.34);
+}
+
+:global(body[data-theme='cyberpunk']) .formSubmit:hover {
+  background: linear-gradient(135deg, #581c87, #fde047);
+  box-shadow: 0 10px 24px rgba(250, 204, 21, 0.42);
+  transform: translateY(-1px);
+}

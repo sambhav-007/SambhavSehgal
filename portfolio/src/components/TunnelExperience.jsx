@@ -45,6 +45,11 @@ const THEME_OPTIONS = [
     name: 'Dark Blood',
     desc: 'Blood-red backdrop with black particles',
   },
+  {
+    id: 'cyberpunk',
+    name: 'Cyberpunk',
+    desc: 'Deep purple neon with yellow particles',
+  },
 ]
 
 function applyProgress(curEl, nxtEl, p, dir) {
@@ -346,7 +351,9 @@ export default function TunnelExperience({ theme = 'dark', onSelectTheme }) {
                 ? 'Themes (Current: Cookies n Creme)'
                 : theme === 'blood'
                   ? 'Themes (Current: Dark Blood)'
-                  : 'Themes (Current: Space)'
+                  : theme === 'cyberpunk'
+                    ? 'Themes (Current: Cyberpunk)'
+                    : 'Themes (Current: Space)'
             }
           >
             <span>Themes</span>
@@ -407,6 +414,8 @@ export default function TunnelExperience({ theme = 'dark', onSelectTheme }) {
                             ? styles.themeOptionSwatchLight
                             : opt.id === 'blood'
                               ? styles.themeOptionSwatchBlood
+                              : opt.id === 'cyberpunk'
+                                ? styles.themeOptionSwatchCyberpunk
                               : styles.themeOptionSwatchDark
                         }`}
                         aria-hidden="true"
@@ -418,6 +427,8 @@ export default function TunnelExperience({ theme = 'dark', onSelectTheme }) {
                             ? styles.patternLight
                             : opt.id === 'blood'
                               ? styles.patternBlood
+                              : opt.id === 'cyberpunk'
+                                ? styles.patternCyberpunk
                               : styles.patternDark
                         }`}
                         aria-hidden="true"

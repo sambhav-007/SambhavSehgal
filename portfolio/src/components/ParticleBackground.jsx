@@ -40,8 +40,17 @@ export default function ParticleBackground({ theme = 'dark' }) {
 
     const isLight = theme === 'light'
     const isBlood = theme === 'blood'
-    const starRgb = isBlood ? '0,0,0' : isLight ? '22,22,22' : '255,255,255'
-    const fadeFill = isBlood
+    const isCyberpunk = theme === 'cyberpunk'
+    const starRgb = isCyberpunk
+      ? '250,204,21'
+      : isBlood
+        ? '0,0,0'
+        : isLight
+          ? '22,22,22'
+          : '255,255,255'
+    const fadeFill = isCyberpunk
+      ? 'rgba(20,10,38,0.24)'
+      : isBlood
       ? 'rgba(74,0,12,0.24)'
       : isLight
         ? 'rgba(247,243,232,0.22)'

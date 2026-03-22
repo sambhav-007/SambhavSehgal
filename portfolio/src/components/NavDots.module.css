@@ -67,6 +67,11 @@
   text-shadow: 0 0 12px rgba(127, 29, 29, 0.4);
 }
 
+:global(body[data-theme='cyberpunk']) .label {
+  color: #fde047;
+  text-shadow: 0 0 12px rgba(168, 85, 247, 0.45);
+}
+
 @media (max-width: 900px) {
   .nav {
     right: 10px;
