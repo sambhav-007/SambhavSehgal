@@ -48,14 +48,32 @@ The site is designed for smooth transitions, strong visual identity, and recruit
 
 - Custom dual-slot tunnel slide architecture for seamless transitions
 - High-performance Framer Motion interactions and reveal animations
+- Multi-theme system with popup theme picker and localStorage persistence
+- Theme presets: Space, Cookies n Creme, Dark Blood, and Cyberpunk
 - Dynamic hero section with role typing effect
 - Live-style LeetCode solved count display with fallback handling
 - Tech arsenal visualization with realistic progress indicators
 - Experience timeline with impact-focused role summaries
 - Projects grid with external links and accent-themed cards
 - Custom animated cursor with subtle trailing glow
+- Theme-aware particle engine (dark/light/blood/cyberpunk variants)
+- Theme-aware nav dots, section headings, cards, and form actions
+- Interactive "Buy Me a Snack" vending-style modal trigger in the header
 - Vertical edge-based slide progress indicator
 - SEO setup with metadata, Open Graph tags, Twitter card, schema, robots, and sitemap
+
+---
+
+## Theme System
+
+The portfolio includes a dedicated theme selector in the top navigation.
+
+- Space: deep-space dark default
+- Cookies n Creme: warm cream light mode with high-contrast black text
+- Dark Blood: blood-red cinematic mode with black surfaces and red accents
+- Cyberpunk: deep purple mode with yellow particles and neon yellow accents
+
+Theme preference is automatically saved in localStorage and restored on next visit.
 
 ---
 
