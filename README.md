@@ -1,7 +1,7 @@
 <h1 align="center">Sambhav Sehgal Portfolio</h1>
 
 <p align="center">
-  Full-Stack Developer Portfolio built with React, Vite, Framer Motion, and a custom 3D tunnel experience.
+  Cinematic full-stack developer portfolio built with React, Vite, Framer Motion, and React Three Fiber.
 </p>
 
 <p align="center">
@@ -21,18 +21,16 @@
 
 ---
 
-## About The Project
+## About
 
-This repository contains my personal portfolio website with a cinematic, interactive tunnel-style navigation system.
+This repository contains my personal portfolio website with a cinematic 3D launch intro and tunnel-style slide navigation.
 
-It showcases:
-- Professional experience
-- Real project work
-- Technical stack and skill depth
-- Leadership and achievements
-- Contact and social profiles
-
-The site is designed for smooth transitions, strong visual identity, and recruiter-friendly storytelling.
+It highlights:
+- About and profile snapshot
+- Technical arsenal and skill groups
+- Experience and project work
+- Achievements and milestones
+- Contact and social links
 
 ---
 
@@ -46,34 +44,35 @@ The site is designed for smooth transitions, strong visual identity, and recruit
 
 ## Core Features
 
-- Custom dual-slot tunnel slide architecture for seamless transitions
-- High-performance Framer Motion interactions and reveal animations
-- Multi-theme system with popup theme picker and localStorage persistence
-- Theme presets: Space, Cookies n Creme, Dark Blood, and Cyberpunk
-- Dynamic hero section with role typing effect
-- Live-style LeetCode solved count display with fallback handling
-- Tech arsenal visualization with realistic progress indicators
-- Experience timeline with impact-focused role summaries
-- Projects grid with external links and accent-themed cards
-- Custom animated cursor with subtle trailing glow
-- Theme-aware particle engine (dark/light/blood/cyberpunk variants)
-- Theme-aware nav dots, section headings, cards, and form actions
-- Interactive "Buy Me a Snack" vending-style modal trigger in the header
-- Vertical edge-based slide progress indicator
-- SEO setup with metadata, Open Graph tags, Twitter card, schema, robots, and sitemap
+- 3D launch intro with Milano spaceship GLTF model, animated portal, and space-jump transition
+- Drag and scroll controls on launch screen with skip fallback
+- Custom dual-slot tunnel architecture for seamless slide transitions
+- Framer Motion animations across headers, panels, overlays, and modals
+- Dynamic hero with role typing and live LeetCode solved count fetch (fallback included)
+- Multi-theme popup picker with persistence via localStorage
+- Theme presets: Space, Cookies n Creme, Dark Blood, Cyberpunk
+- Theme-aware particle engine and color system for UI surfaces, nav, and actions
+- Interactive Buy Me a Snack vending-style modal with cart, quantities, and QR checkout flow
+- Vertical slide progress indicator and side navigation dots
+- SEO-ready setup (Open Graph, Twitter metadata, robots, sitemap, manifest)
 
 ---
 
-## Theme System
+## 3D Spaceship Intro
 
-The portfolio includes a dedicated theme selector in the top navigation.
+Yes, the spaceship model is included and used in the app.
 
-- Space: deep-space dark default
-- Cookies n Creme: warm cream light mode with high-contrast black text
-- Dark Blood: blood-red cinematic mode with black surfaces and red accents
-- Cyberpunk: deep purple mode with yellow particles and neon yellow accents
+- Model file: `portfolio/public/models/milano/Milano_GotG.gltf`
+- Binary data: `portfolio/public/models/milano/Milano_GotG.bin`
+- Textures:
+  - `portfolio/public/models/milano/images/00_BaseColor_Lite.jpg`
+  - `portfolio/public/models/milano/images/00_Emissive_Lite.jpg`
+- Runtime component: `portfolio/src/components/LaunchIntro.jsx`
 
-Theme preference is automatically saved in localStorage and restored on next visit.
+The launch sequence includes:
+- Boot-terminal loading overlay
+- Interactive model framing and camera control
+- Animated portal effect and jump transition into the portfolio
 
 ---
 
@@ -86,9 +85,14 @@ Theme preference is automatically saved in localStorage and restored on next vis
 - CSS Modules
 - React Icons
 
-### Tooling
+### 3D and Effects
+- three
+- @react-three/fiber
+- @react-three/drei
+
+### Tooling and Deployment
 - npm
-- Vercel (deployment)
+- Vercel
 
 ---
 
@@ -98,9 +102,13 @@ Theme preference is automatically saved in localStorage and restored on next vis
 SambhavSehgal/
 ├── portfolio/
 │   ├── public/
-│   │   ├── logos/
-│   │   ├── favicon.svg
-│   │   ├── og-image.svg
+│   │   ├── image.png
+│   │   ├── Gpay-QR.jpg
+│   │   ├── models/
+│   │   │   └── milano/
+│   │   │       ├── Milano_GotG.gltf
+│   │   │       ├── Milano_GotG.bin
+│   │   │       └── images/
 │   │   ├── robots.txt
 │   │   ├── sitemap.xml
 │   │   └── site.webmanifest
@@ -111,6 +119,7 @@ SambhavSehgal/
 │   │   └── main.jsx
 │   ├── index.html
 │   ├── package.json
+│   ├── vercel.json
 │   └── vite.config.js
 └── README.md
 ```
@@ -154,33 +163,31 @@ npm run preview
 
 ## Deployment (Vercel)
 
-This repository uses a subfolder setup where the app lives in portfolio.
+This app is deployed from the `portfolio` subfolder.
 
-Use these settings in Vercel:
+Use these Vercel settings:
 - Framework Preset: Vite
 - Root Directory: portfolio
 - Build Command: npm run build
 - Output Directory: dist
 
-The file portfolio/vercel.json includes SPA rewrite support.
+`portfolio/vercel.json` includes SPA rewrite support.
 
 ---
 
-## SEO Setup Included
+## SEO Setup
 
-The project already includes:
-- Canonical URL
-- Meta description and robots directives
-- Open Graph and Twitter tags
-- Person schema in JSON-LD
+Included in the project:
+- Canonical and social metadata in `portfolio/index.html`
+- Open Graph and Twitter card tags
 - robots.txt
 - sitemap.xml
-- Social preview image
+- Web manifest
 
-If you use a custom domain later, update domain URLs in:
-- portfolio/index.html
-- portfolio/public/robots.txt
-- portfolio/public/sitemap.xml
+If you switch to a custom domain, update URLs in:
+- `portfolio/index.html`
+- `portfolio/public/robots.txt`
+- `portfolio/public/sitemap.xml`
 
 ---
 
@@ -195,4 +202,4 @@ If you use a custom domain later, update domain URLs in:
 
 ## Star This Repo
 
-If you like the project, a star helps and is always appreciated.
+If you like this project, a star is appreciated.
