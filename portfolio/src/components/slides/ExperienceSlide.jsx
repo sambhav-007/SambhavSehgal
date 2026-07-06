@@ -3,10 +3,24 @@ import s from './slides.module.css'
 
 const JOBS = [
   {
+    role: 'Founder & Software Engineer',
+    company: 'Viltrumate Technologies',
+    logo: '/logos/viltrumate.png',
+    period: 'Jan 2026 – Present',
+    type: 'Founder',
+    color: '#f59e0b',
+    tech: ['React', 'Node.js', 'Razorpay', 'Cloudinary', 'Gemini AI', 'Google Maps API', 'WhatsApp API'],
+    points: [
+      'Founded an IT solutions startup delivering custom software, e-commerce platforms, AI-powered applications, and digital transformation solutions',
+      'Led the complete software development lifecycle from client consultation and architecture to deployment, SEO, and long-term maintenance',
+      'Built the Viltrumate Commerce Engine — a reusable platform for production-ready e-commerce apps with configurable storefronts, admin dashboards, inventory, and order management',
+    ],
+  },
+  {
     role: 'Website Developer & Digital Media Manager',
     company: 'Dua Property',
     logo: '/logos/dua-property.jpg',
-    period: 'Oct 2025 – Present',
+    period: 'Oct 2025 – May 2026',
     type: 'Freelance',
     color: '#a855f7',
     tech: ['React', 'Tailwind CSS', 'SEO', 'Web Hosting', 'Digital Marketing'],
@@ -31,17 +45,17 @@ const JOBS = [
     ],
   },
   {
-    role: 'Website Developer',
+    role: 'Software Developer',
     company: 'Kabana de Nature',
     logo: '/logos/kabana-de-nature.png',
-    period: 'Jan 2025 – Sep 2025',
+    period: 'Jan 2025 – Jun 2026',
     type: 'Freelance',
     color: '#06b6d4',
-    tech: ['HTML','CSS','JavaScript', 'SEO', 'DNS', 'Bootstrap', 'PHP'],
+    tech: ['HTML', 'CSS', 'JavaScript', 'PHP', 'Bootstrap', 'Razorpay', 'SEO', 'DNS'],
     points: [
-      'Developed the official resort website from concept to deployment',
-      'Implemented booking UI, gallery system, and customer contact integrations',
-      'Delivered a responsive hospitality website optimized for mobile users',
+      'Designed and developed a hospitality management and online reservation platform',
+      'Built a full-featured admin dashboard with booking calendar, reservations, customer management, room availability, pricing controls, and reporting',
+      'Integrated Razorpay payments and managed deployment, DNS, SEO, and production maintenance',
     ],
   },
   
