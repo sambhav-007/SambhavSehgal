@@ -101,7 +101,24 @@
 }
 
 @media (max-width: 800px) {
-  .panels { grid-template-columns: 1fr; }
+  /* Stack panels into ONE scroll container — two separate half-height
+     scrollbars are unusable on touch and clip the bottom panel. */
+  .panels {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(124,58,237,0.3) transparent;
+  }
+
+  .panel {
+    flex: none;
+    height: auto;
+    overflow: visible;
+  }
+
   .wrapper { padding: 72px 20px 55px; }
 }
 

@@ -12,10 +12,12 @@ function useCountUp(target, duration = 1200, delay = 1100) {
 
   useEffect(() => {
     if (target == null) return
-    // Parse numeric part and suffix (e.g. "35+" → 35, "+")
-    const numStr = String(target)
-    const suffix = numStr.replace(/[0-9]/g, '')
-    const end    = parseInt(numStr) || 0
+    // Parse numeric part and suffix (e.g. "35+" → 35, "+"; "4.5K+" → 4.5, "K+")
+    const numStr   = String(target)
+    const m        = numStr.match(/^(\d+(?:\.\d+)?)(.*)$/)
+    const end      = m ? parseFloat(m[1]) : 0
+    const suffix   = m ? m[2] : numStr
+    const decimals = m && m[1].includes('.') ? m[1].split('.')[1].length : 0
 
     let startTime = null
     const delayTimer = setTimeout(() => {
@@ -24,7 +26,7 @@ function useCountUp(target, duration = 1200, delay = 1100) {
         const progress = Math.min((ts - startTime) / duration, 1)
         // Ease out cubic
         const eased = 1 - Math.pow(1 - progress, 3)
-        setDisplay(String(Math.round(eased * end)) + suffix)
+        setDisplay((eased * end).toFixed(decimals) + suffix)
         if (progress < 1) rafRef.current = requestAnimationFrame(tick)
       }
       rafRef.current = requestAnimationFrame(tick)
@@ -67,7 +69,7 @@ export default function HeroSlide() {
 
   useEffect(() => {
     // Hardcoded fallback — update this periodically to match your real count
-    const FALLBACK = '200+'
+    const FALLBACK = '270+'
     const controller = new AbortController()
     const timer = setTimeout(() => {
       controller.abort()
@@ -109,8 +111,12 @@ export default function HeroSlide() {
     }
   }, [text, typing, ri])
 
-  const stats = [['30+', 'Technologies'], ['10+', 'Projects'], ['2+', 'Client Projects']]
-  const lcVal = leetcodeSolved != null ? `${leetcodeSolved}` : '200+'
+  const stats = [
+    ['30+', 'Technologies'],
+    ['4.5K+', 'LinkedIn Followers', 'https://www.linkedin.com/in/sambhav-sehgal-35896a334/'],
+    ['6+', 'Client Projects'],
+  ]
+  const lcVal = leetcodeSolved != null ? `${leetcodeSolved}` : '270+'
 
   const lcIcon = (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="#f89f1b" style={{ flexShrink: 0 }}>
@@ -183,8 +189,8 @@ export default function HeroSlide() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.05 }}
       >
-        {stats.map(([v, l], i) => (
-          <StatBox key={l} value={v} label={l} delay={1100 + i * 120} />
+        {stats.map(([v, l, href], i) => (
+          <StatBox key={l} value={v} label={l} delay={1100 + i * 120} href={href} />
         ))}
         <StatBox
           value={lcVal}

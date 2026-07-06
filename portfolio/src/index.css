@@ -167,6 +167,14 @@ a, button, [role="button"], input, label, select, textarea {
   cursor: none;
 }
 
+/* Touch devices: the custom cursor is hidden, so restore native cursors */
+@media (pointer: coarse) {
+  body,
+  a, button, [role="button"], input, label, select, textarea {
+    cursor: auto;
+  }
+}
+
 a { color: inherit; text-decoration: none; }
 button { cursor: pointer; font-family: inherit; }
 img { max-width: 100%; }

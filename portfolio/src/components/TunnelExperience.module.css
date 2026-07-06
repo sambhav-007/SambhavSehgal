@@ -215,6 +215,8 @@
 
 .themePanel {
   width: min(92vw, 420px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
   border-radius: 16px;
   border: 1px solid rgba(148, 163, 184, 0.26);
   background:
@@ -667,5 +669,29 @@
 
   .scrollHint {
     display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .header {
+    padding: 8px 10px;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .headerActions {
+    gap: 6px;
+  }
+
+  .themeToggle {
+    padding: 6px 8px;
+    font-size: 0.64rem;
+  }
+
+  .hireBtn {
+    padding: 6px 9px;
+    font-size: 0.66rem;
   }
 }

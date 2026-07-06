@@ -77,6 +77,20 @@ function applyProgress(curEl, nxtEl, p, dir) {
 const hideSlot = (el) => { if (el) { el.style.opacity = '0'; el.style.pointerEvents = 'none' } }
 const showSlot = (el) => { if (el) { el.style.opacity = '';  el.style.pointerEvents = '' } }
 
+// Nearest scrollable ancestor of a touch target — inner content must be able
+// to scroll on touch devices before a swipe is treated as slide navigation
+const findScrollable = (el) => {
+  let node = el instanceof Element ? el : null
+  while (node && node !== document.body) {
+    if (node.scrollHeight > node.clientHeight + 1) {
+      const { overflowY } = getComputedStyle(node)
+      if (overflowY === 'auto' || overflowY === 'scroll') return node
+    }
+    node = node.parentElement
+  }
+  return null
+}
+
 export default function TunnelExperience({ theme = 'dark', onSelectTheme }) {
   /**
    * Dual-slot architecture:
@@ -105,6 +119,9 @@ export default function TunnelExperience({ theme = 'dark', onSelectTheme }) {
   const pendingIdxRef = useRef(null) // target idx of in-flight preview
   const scrollAccum   = useRef(0)
   const touchY        = useRef(null)
+  const touchX        = useRef(null)
+  const touchScroll   = useRef(null) // scroll-boundary state of the touched panel at gesture start
+  const lastInnerScroll = useRef(0)  // last time a wheel event scrolled slide content
 
   // Init: hide the empty second slot
   useEffect(() => { hideSlot(ref1.current) }, [])
@@ -236,8 +253,35 @@ export default function TunnelExperience({ theme = 'dark', onSelectTheme }) {
   // ── Input events ───────────────────────────────────────────────────────────
   useEffect(() => {
     const onWheel = (e) => {
+      if (inTransit.current) {
+        e.preventDefault()
+        return
+      }
+
+      // Wheel over scrollable slide content: let the browser scroll it and
+      // only treat the wheel as navigation once that content hits its edge.
+      if (!hasPreview.current) {
+        const scroller = findScrollable(e.target)
+        if (scroller) {
+          const goingDown = e.deltaY > 0
+          const atTop     = scroller.scrollTop <= 1
+          const atBottom  = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 1
+          if ((goingDown && !atBottom) || (!goingDown && !atTop)) {
+            lastInnerScroll.current = performance.now()
+            scrollAccum.current = 0
+            return // no preventDefault — native scroll consumes the wheel
+          }
+          // Just reached the edge: brief cooldown so leftover trackpad
+          // momentum doesn't fling straight into the next slide. Discrete
+          // mouse-wheel notches (large deltas) have no momentum — skip it.
+          if (Math.abs(e.deltaY) <= 50 && performance.now() - lastInnerScroll.current < 250) {
+            e.preventDefault()
+            return
+          }
+        }
+      }
+
       e.preventDefault()
-      if (inTransit.current) return
 
       const isMouse = Math.abs(e.deltaY) > 50
       const tick    = isMouse
@@ -295,20 +339,45 @@ export default function TunnelExperience({ theme = 'dark', onSelectTheme }) {
       requestAnimationFrame(() => requestAnimationFrame(() => commitTransition()))
     }
 
-    const onTouchStart = (e) => { touchY.current = e.touches[0].clientY }
-    const onTouchEnd   = (e) => {
+    const onTouchStart = (e) => {
+      touchY.current = e.touches[0].clientY
+      touchX.current = e.touches[0].clientX
+      // Capture boundary state NOW — by touchend the browser has already
+      // scrolled the content, so checking then would flip slides too early.
+      const scroller = findScrollable(e.target)
+      touchScroll.current = scroller
+        ? {
+            atTop:    scroller.scrollTop <= 1,
+            atBottom: scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 1,
+          }
+        : null
+    }
+
+    const onTouchEnd = (e) => {
       if (touchY.current === null) return
-      const delta = touchY.current - e.changedTouches[0].clientY
-      if (Math.abs(delta) > 70 && !inTransit.current && !hasPreview.current) {
-        const d = delta > 0 ? 1 : -1
-        const t = currentIdxRef.current + d
-        if (t >= 0 && t < SLIDES.length) {
-          startPreview(d, t)
-          window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: d } }))
-          requestAnimationFrame(() => requestAnimationFrame(() => commitTransition()))
-        }
+      const delta  = touchY.current - e.changedTouches[0].clientY
+      const deltaX = (touchX.current ?? 0) - e.changedTouches[0].clientX
+      const scroll = touchScroll.current
+      touchY.current      = null
+      touchX.current      = null
+      touchScroll.current = null
+
+      // Ignore mostly-horizontal swipes and taps
+      if (Math.abs(delta) <= 70 || Math.abs(delta) < Math.abs(deltaX)) return
+      if (inTransit.current || hasPreview.current) return
+
+      const d = delta > 0 ? 1 : -1
+
+      // Swipe inside scrollable content scrolls it; only navigate when the
+      // content was already at the edge in the swipe direction.
+      if (scroll && ((d > 0 && !scroll.atBottom) || (d < 0 && !scroll.atTop))) return
+
+      const t = currentIdxRef.current + d
+      if (t >= 0 && t < SLIDES.length) {
+        startPreview(d, t)
+        window.dispatchEvent(new CustomEvent('tunnelwarp', { detail: { dir: d } }))
+        requestAnimationFrame(() => requestAnimationFrame(() => commitTransition()))
       }
-      touchY.current = null
     }
 
     window.addEventListener('wheel',      onWheel,      { passive: false })

@@ -84,7 +84,7 @@ function Left() {
 
 function Right() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, height: '100%' }}>
+    <div className={s.groupCol}>
       {GROUPS.map((g) => (
         <div key={g.name} className={s.skillGroup}>
           <div className={s.skillGroupHeader}>

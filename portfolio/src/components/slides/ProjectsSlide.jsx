@@ -62,7 +62,7 @@ const PROJECTS = [
 
 function Content() {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 14, height: '100%' }}>
+    <div className={s.projGrid}>
       {PROJECTS.map((p) => (
         <div key={p.title} className={s.projCard} style={{ '--c': p.gradient, position: 'relative' }}>
           {p.link && (

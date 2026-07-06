@@ -49,7 +49,7 @@ const JOBS = [
 
 function Content() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, height: '100%' }}>
+    <div className={s.expList}>
       {JOBS.map((j) => (
         <div key={j.role + j.company} className={s.expCard} style={{ borderLeftColor: j.color, borderLeftWidth: 3 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 4 }}>

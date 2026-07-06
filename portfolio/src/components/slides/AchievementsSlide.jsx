@@ -44,8 +44,8 @@ const SOFT = ['Communication', 'Leadership', 'Problem Solving', 'Teamwork', 'Ada
 
 function Content() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, height: '100%' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, flex: 1, minHeight: 0 }}>
+    <div className={s.achWrap}>
+      <div className={s.achGrid}>
         {ACHIEVEMENTS.map((a) => (
           <div key={a.title} className={s.achCard} style={{ '--ac': a.tagColor }}>
             <div className={s.achIcon} style={{ background: a.iconBg }}>{a.icon}</div>

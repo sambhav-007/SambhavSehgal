@@ -894,18 +894,48 @@
     font-size: 0.74rem;
   }
   .layout {
+    /* Machine row sizes to its content — no inner scrolling; cart gets the rest */
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(0, 48dvh) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
     overflow: hidden;
   }
   .machineScene {
-    padding: 8px 6px 6px;
-    max-height: 48dvh;
-    overflow: auto;
+    padding: 8px 6px 4px;
+    max-height: none;
+    overflow: visible;
   }
   .machine {
-    width: clamp(240px, 78vw, 300px);
+    width: clamp(250px, 84vw, 330px);
     transform: rotateY(-3deg) rotateX(1deg);
+  }
+  .machineHeader {
+    padding: 8px 12px 7px;
+  }
+  .headerLights {
+    margin-top: 5px;
+  }
+  /* 4 columns → 3 rows: shorter machine that fits above the cart */
+  .snackGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .snackName {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* Keypad/coin column is decorative — reclaim its height for the cart */
+  .ctrlRight {
+    display: none;
+  }
+  .controlPanel {
+    padding: 7px 10px;
+  }
+  .dispenseTray {
+    padding: 5px 14px 7px;
+  }
+  .trayOpening {
+    height: 18px;
   }
   .machine::before,
   .machine::after {
@@ -992,13 +1022,22 @@
 }
 
 @media (max-width: 700px) and (max-height: 740px) {
-  .layout {
-    grid-template-rows: minmax(0, 44dvh) minmax(0, 1fr);
+  /* Short phones: compact the machine further so it still fits unscrolled */
+  .machineScene {
+    padding-top: 6px;
   }
 
-  .machineScene {
-    max-height: 44dvh;
-    padding-top: 6px;
+  .snackEmoji {
+    font-size: 1.15rem;
+  }
+
+  .machineHeaderText {
+    font-size: 0.85rem;
+  }
+
+  .displayScreen {
+    min-height: 28px;
+    padding: 6px 8px;
   }
 
   .topBanner {
@@ -1058,7 +1097,7 @@
 
 @media (max-width: 420px) {
   .machine {
-    width: min(86vw, 260px);
+    width: min(90vw, 320px);
     transform: rotateY(-2deg) rotateX(1deg);
   }
   .snackName {

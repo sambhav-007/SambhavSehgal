@@ -41,7 +41,7 @@ function Left() {
 
 function Right() {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, height: '100%' }}>
+    <div className={s.traitsGrid}>
       {TRAITS.map((t) => (
         <div key={t.title} className={s.traitCard}>
           <div className={s.traitIcon}>{t.icon}</div>
